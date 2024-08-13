@@ -19,19 +19,19 @@ import Footer from '@/layouts/footer/Footer.vue';
 <template>
     <!--Header-->
     <Header />
-        <HeroBanner />
+        <HeroBanner id="hero" />
         <!-- <Services /> -->
         <!-- <BuildAmazing /> -->
         
         <!-- <ChoosePricePlan/> -->
-        <Testimonials />
-        <BuildFeature />
-        <Blog/>
+        <Testimonials id="testimonials"/>
+        <BuildFeature id="features"/>
+        <Blog id="blog"/>
         
         <!-- <Portfolio/> -->
         <!-- <Team/> -->
         
-        <Contact/>
+        <Contact id="contact"/>
         <!-- <UpgradetoPro/> -->
     <!-- <Footer /> -->
 </template>

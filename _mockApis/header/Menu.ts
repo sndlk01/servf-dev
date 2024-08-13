@@ -10,28 +10,24 @@ export interface menu {
 const sidebarItem: menu[] = [
     {
         title: 'Home',
-        to: '/',
+         componentId:'hero'
         
     },
     {
         title: 'Review',
-        to: 'Testimonials',
-        componentId:'Testimonials'
+        componentId:'testimonials'
     },
     {
         title: 'About Us',
-        to: 'BuildFeature',
-        componentId:'BuildFeature'
+        componentId:'features'
     },
     {
         title: 'Contact Us',
-        to: 'Contact',
-        componentId: 'Contact'
+        componentId: 'contact'
     },
     {
         title: 'Blogs',
-        to: 'BlogSection',
-        componentId: 'BlogSection'
+        componentId: 'blog'
     },
 ];
 

@@ -33,7 +33,7 @@
                 <p class="text-h1 mb-6" style="">Simple way to find your</p>
                 <p class="text-friend mb-6">FRIENDS</p>
                 <p class="text-body-1 mb-8">SERVF บริการหาเพื่อนไปทำกิจกรรมต่าง ๆ ร่วมกัน</p>
-                <v-btn variant="flat" color="primary" size="large" class="px-9">Learn more</v-btn>
+                <v-btn variant="flat" color="white" size="large" class="px-9" style="color: #7a0eb0;">Learn more</v-btn>
             </v-col>
             <v-col cols="12" md="6" class="d-flex justify-content-end align-items-end w-100">
                 <div class="position-relative text-right w-100">

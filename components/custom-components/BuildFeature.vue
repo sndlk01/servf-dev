@@ -38,10 +38,12 @@ import { BuildFeaturesData } from '@/_mockApis/custom-components/index';
                 <v-col v-for="card in BuildFeaturesData" :key="card.title">
                     <div class="icons" style="display: flex; justify-content: center; flex-wrap: wrap;">
                         <div class="raduis d-flex"
-                            style="background-color: #723bcf; width: 10rem; height: 10rem; justify-content: center; align-items: center; border-radius: 6rem; background-color: #fff;">
+                            style="background-color: #723bcf; width: 10rem; height: 10rem; 
+                            justify-content: center; align-items: center; border-radius: 6rem; background-color: #fff;
+                            ">
                             <component :is="card.icon" class="text-primary" stroke-width="1.5" size="60" />
                         </div>
-                        <div class="text" style="text-align: center;">
+                        <div class="text" style="text-align: center; width: 100%;">
                             <h4 class="text-h4 text-dark font-weight-bold my-sm-6 my-4 px-md-6">{{ card.title }}</h4>
                         </div>
                     </div>

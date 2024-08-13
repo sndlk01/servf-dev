@@ -13,11 +13,15 @@ import { Blog } from '@/_mockApis/custom-components/index';
     padding: 5rem 1rem;
     border-radius: 2rem;
 }
+
+@media (max-width: 600px) {
+  /* Styles for phone screens */
+}
 </style>
 <template>
     <div class="blogs" id="BlogSection">
         <v-container class="container-blogs">
-            <v-row class="justify-center">
+            <v-row style="justify-content: space-around;">
                 <!-- Main Blog Post -->
                 <v-col cols="12" md="6" sm="12">
                     <v-card elevation="0" variant="outlined">
