@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mitr:wght@200;300;400;500;600;700&family=Noto+Sans+Thai:wght@100..900&display=swap');
+@import 'variables';
+@import 'vuetify/styles/main.sass';
+@import 'override';
+@import 'layout/text';
+@import 'layout/container';
+@import 'layout/header';
+@import 'layout/footer';
+
+/*components*/
+@import './components/VBreadcrumb';
+@import './components/VAlert';
+@import './components/VButtons';
+@import './components/VCard';
+@import './components/VCarousel';
+@import './components/VField';
+@import './components/VList';
+@import './components/VInput';
+@import './components/VNavigationDrawer';
+@import './components/VShadow';
+@import './components/VSwitch';
+@import './components/VSelectionControl';
+@import './components/VTextField';
+@import './components/VTextarea';
+@import './components/VTabs';
+@import './components/VTable';
+@import './components/VExpansionpanel';
+@import './components/VPagination';
+
+
+//Corporate Demo
+@import 'demos/corporate';
