@@ -233,14 +233,16 @@ const Portfolio: PortfolioSection[] = [
 
 //Blog
 
-import blog1 from '/images/blog-grid/grid-LP.jpg';
-import blog2 from '/images/blog-grid/grid-uxdesign.jpg';
-import blog3 from '/images/blog-grid/grid-search.jpg';
+import blog1 from '/images/blog-grid/blog-1.jpg';
+import blog2 from '/images/blog-grid/blog-2.jpg';
+import blog3 from '/images/blog-grid/blog-3.jpg';
+import blog4 from '/images/blog-grid/blog-4.jpg';
+
 
 const Blog: BlogSection[] = [
   {
     id: 1,
-    img: blog2,
+    img: blog1,
     badge: 'UX Design',
     date: 'Aug 12, 2024',
     view: '27,567 Views',
@@ -264,17 +266,17 @@ const Blog: BlogSection[] = [
     date: 'Aug 10, 2024',
     view: '28,567 Views',
     title: '10 กิจกรรมที่คนขอนแก่นห้ามพลาด!',
-    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+    desc: 'น้องเป็นสาวขอนแก่น ยังบ่เคยมีแฟน บ้านอยู่แดนอีสาน น้องเป็นสาววัยอ่อน ได้แต่นอนตะแคง ยามเมื่อแลงฝันหวาน จะมีชายใด ไผเดต้องการ จะมีชายใด ไผเดต้องการ หมายปองน้องนั่น แม้ต้องการจะคอย สาวอีสานบ้านป่า เช้าก็ไปทำนา ค่ำแลงมาเหงาหงอย เขาว่าน้องเป็นลาว เป็นสาวเมืองอีสาน ใจน้องนั้นเลื่อนลอย จงเอ็นดู แน้เด้ออ้ายเด้อ จงปรานี น้องแน่จั๊กหน่อย ฮักน้องบ่อยบ่อย พอน้องได้พลอยดีใจ',
     name: 'David William'
   },
   {
     id: 4,
-    img: blog3,
+    img: blog4,
     badge: 'Html',
     date: 'Aug 9, 2024',
     view: '28,567 Views',
     title: '“Lonely Market” ถ้าคุณเหงาเราช่วยได้!',
-    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+    desc: 'นี่คือเหงานี่แหละเหงา นี่คือความจริงที่ได้เจอ เจ็บปวดทรมาน ลึกลงข้างในใจ โอ้ความเหงา มันช่างหนาว มันช่างยาวนานและทุกข์ทน รอคอยใครบางคนมาหยุดมัน',
     name: 'David William'
   },
   {

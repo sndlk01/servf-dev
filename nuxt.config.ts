@@ -23,7 +23,6 @@ export default defineNuxtConfig({
   },
   nitro: {
     serveStatic: true,
-     preset: 'firebase'
   },
   
   sourcemap: { server: true, client: false },

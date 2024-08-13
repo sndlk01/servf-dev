@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { TestimonialsData } from '@/_mockApis/custom-components/index';
 </script>
+
+
 <template>
     <div class="py-md-15 py-8" id="Testimonials">
         <v-container>
@@ -20,7 +22,7 @@ import { TestimonialsData } from '@/_mockApis/custom-components/index';
             </v-row>
             <v-row class="justify-center">
                 <v-col cols="12" md="4" sm="6" v-for="card in TestimonialsData" :key="card.name">
-                    <v-card elevation="0">
+                    <v-card elevation="10">
                         <v-card-text class="pa-sm-8 pa-5">
                             <img src="/images/shape/question.png" alt="" style="width: 30px;">
                             <p class="mb-8 text-subtitle-1">“{{ card.testimonial }}”</p>
