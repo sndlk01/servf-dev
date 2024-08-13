@@ -405,7 +405,9 @@ const Team: TeamSection[] = [
 import profile1 from '/images/blog/cyrus.jpg';
 import profile2 from '/images/blog/kriss.jpg';
 import profile3 from '/images/blog/sara.jpg';
-
+import profile4 from '/images/blog/12.png';
+import profile5 from '/images/blog/13.png';
+import profile6 from '/images/blog/14.png';
 
 const TestimonialsData: Testimonials[] = [
   {
@@ -428,18 +430,26 @@ const TestimonialsData: Testimonials[] = [
     name: "SOMYING",
     rating: 5
   },
-  // {
-  //   img: profile3,
-  //   testimonial: "sfsdfff is parturient montes, nascetur ridiculus mus. Cras venene veliel vestibulum.",
-  //   name: "Lasds AM",
-  //   rating: 5
-  // },
-  // {
-  //   img: profile3,
-  //   testimonial: "sfsdsdffvcvcv Cras venene veliel vestibulum.",
-  //   name: "LcvM",
-  //   rating: 5
-  // },
+  {
+    img: profile4,
+    testimonial: "คุ้มค่ามาก ๆ ครับ ได้ประสบการณ์ใหม่ ๆ และเพื่อนใหม่ ๆ ที่น่าสนใจ แนะนำเลยครับ คอนเฟิร์ม",
+    name: "YAMM",
+    rating: 5
+  },
+  {
+    img: profile5,
+    testimonial: "เป็นบริการที่ตอบโจทย์คนรุ่นใหม่มากๆ ครับ ปลอดภัย เวรี่กู้ดอะ สุดยอด",
+    name: "TONY",
+    rating: 5
+  },
+
+  {
+    img: profile6,
+    testimonial: "SERVF ช่วยให้ฉันเจอเพื่อนใหม่ๆ ได้ลองทำกิจกรรมใหม่ๆ ขอบคุณมากค่ะ",
+    name: "SANDY",
+    rating: 5
+  },
+
 
 
 ];
