@@ -10,7 +10,6 @@ import MobileNavCollapse from './NavCollapse/MobileNavCollapse.vue';
 
 const drawer = ref(false);
 
-// For on Scroll Effect on Header
 onBeforeMount(() => {
   window.addEventListener('scroll', handleScroll)
 })

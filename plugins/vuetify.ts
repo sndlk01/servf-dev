@@ -43,6 +43,7 @@ const themecolors: ThemeDefinition = {
       darkBorder:'#153757',
       darkblue:'#102d47',
       lightborder:'#E5ECF8',
+      chatbtn:'#723bcf',
     //   background: 'transparent',
       surface: '#fff',
       'on-surface-variant':'#fff',
