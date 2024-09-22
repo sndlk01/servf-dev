@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import emailjs from '@emailjs/browser';
 import Header from '@/layouts/header/Header.vue';
 import HeroBanner from '@/components/custom-components/HeroBanner.vue';
 import BuildFeature from '@/components/custom-components/BuildFeature.vue';
@@ -11,17 +12,41 @@ const chatOpen = ref(false);
 const name = ref('');
 const email = ref('');
 const message = ref('');
+const submitStatus = ref('');
 
 const toggleChat = () => {
     chatOpen.value = !chatOpen.value;
 };
 
-const submitForm = () => {
-    console.log('Form submitted:', { name: name.value, email: email.value, message: message.value });
-    name.value = '';
-    email.value = '';
-    message.value = '';
-    chatOpen.value = false;
+const submitForm = async () => {
+    try {
+        const templateParams = {
+            from_name: name.value,
+            from_email: email.value,
+            message: message.value,
+        };
+
+        const response = await emailjs.send(
+            'service_1o9sszw',
+            'template_g2wmh2b',
+            templateParams,
+            'wLrtgS0s_mjQ5LMau'
+        );
+
+        if (response.status === 200) {
+            submitStatus.value = 'Form submitted successfully';
+            name.value = '';
+            email.value = '';
+            message.value = '';
+            setTimeout(() => {
+                chatOpen.value = false;
+                submitStatus.value = '';
+            }, 3000);
+        }
+    } catch (error) {
+        console.error('Error submitting form:', error);
+        submitStatus.value = 'Error submitting form. Please try again.';
+    }
 };
 </script>
 
@@ -59,6 +84,10 @@ const submitForm = () => {
                         Send
                     </v-btn>
                 </v-form>
+                <p v-if="submitStatus"
+                    :class="{ 'success-message': submitStatus.includes('success'), 'error-message': submitStatus.includes('Error') }">
+                    {{ submitStatus }}
+                </p>
             </v-card-text>
             <v-card-actions class="justify-center pb-4">
                 <v-btn text @click="toggleChat">Close</v-btn>
@@ -100,5 +129,15 @@ const submitForm = () => {
     .chat-dialog {
         width: 400px;
     }
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
 }
 </style>
