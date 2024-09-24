@@ -13,6 +13,7 @@ const scrollToTestimonials = () => {
 .corporate-banner {
     background: rgb(146, 122, 244);
     background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%);
+    margin-top: 7.95rem !important;
 }
 
 .text-h1 {

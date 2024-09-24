@@ -4,10 +4,16 @@ const bcrypt = require('bcryptjs'); // For password hashing (optional but recomm
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import cors from 'cors';
 const app = express();
 
 app.use(express.json());
 
+const corsOptions = {
+  origin: 'http://localhost:3000', // Allow only the frontend origin
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 const prisma = new PrismaClient();
 
 // Initialize default admin credentials in the database

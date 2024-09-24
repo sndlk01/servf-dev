@@ -1,71 +1,92 @@
 <script setup>
-import { getLogin } from "~/plugins/api/authService";
-const router = useRouter();
-// const checkbox = ref(false);
-const userName = ref('')
-const passWord = ref('')
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-// const Login = async () => {
-//     const loginData = 
-//     console.log("🚀 ~ Login ~ loginData:", loginData)
-//     // if(userName && passWord) {
-//     //     localStorage.setItem("isLogin","true");
-//     //     router.push('/admin/dashboard');
+const router = useRouter()
+const username = ref('')
+const password = ref('')
+const error = ref('')
+const isLoading = ref(false)
 
-//     // } 
-// }
+// Nuxt global state for login status
+const isLoggedIn = useState('isLoggedIn', () => false) // Initialize to false
 
-const Login = async () => {
-    const data = {
-        username: userName.value,
-        password: passWord.value
+const API_URL = 'http://localhost:8000' // Update this if your backend URL is different
+
+const login = async () => {
+    error.value = ''
+    isLoading.value = true
+
+    if (!username.value || !password.value) {
+        error.value = 'Please enter both username and password.'
+        isLoading.value = false
+        return
     }
-    console.log(data)
-    await getLogin(data).then((result) => {
-        console.log(result)
-        if (result.statusCode === 200) {
-            localStorage.setItem("isLogin", true);
-            router.push('/admin/dashboard');
-        }
-    })
-};
-</script>
 
+    try {
+        const response = await axios.post(`${API_URL}/login`, {
+            username: username.value,
+            password: password.value
+        });
+
+        console.log('Login response:', response.data);
+
+        if (response.data && response.data.message === 'Login successful') {
+            localStorage.setItem('isLogin', 'true'); // Update local storage
+            localStorage.setItem('user', JSON.stringify(response.data.user));
+
+            isLoggedIn.value = true; // Update Nuxt state to logged in
+            console.log('Login status set:', localStorage.getItem('isLogin'));
+
+            // Redirect to /admin using navigateTo
+            return navigateTo('/admin');
+        } else {
+            error.value = 'Unexpected response from server.';
+        }
+    } catch (err) {
+        console.error('Login error:', err);
+        if (err.response) {
+            if (err.response.status === 401) {
+                error.value = 'Invalid credentials. Please try again.';
+            } else {
+                error.value = `Server error: ${err.response.data.message || 'Unknown error'}`;
+            }
+        } else {
+            error.value = 'An unexpected error occurred. Please try again.';
+        }
+    } finally {
+        isLoading.value = false;
+    }
+}
+</script>
 <template>
     <div class="d-flex align-center text-center mb-6">
         <div class="text-h6 w-100 px-5 font-weight-regular auth-divider position-relative">
-            <span class="bg-surface px-5 py-3 position-relative text-subtitle-1 text-grey100">Your Social
-                Campaigns</span>
+            <h2>SERVF ADMIN</h2>
         </div>
     </div>
-    <div>
+    <form @submit.prevent="login">
         <v-row class="mb-3">
             <v-col cols="12">
                 <v-label class="font-weight-medium mb-1">Username</v-label>
-                <v-text-field variant="outlined" v-model="userName" class="pwdInput" hide-details
-                    color="primary"></v-text-field>
+                <v-text-field variant="outlined" v-model="username" class="pwdInput" hide-details color="primary"
+                    :disabled="isLoading" required></v-text-field>
             </v-col>
             <v-col cols="12">
                 <v-label class="font-weight-medium mb-1">Password</v-label>
-                <v-text-field variant="outlined" v-model="passWord" class="border-borderColor" type="password"
-                    hide-details color="primary"></v-text-field>
+                <v-text-field variant="outlined" v-model="password" class="border-borderColor" type="password"
+                    hide-details color="primary" :disabled="isLoading" required></v-text-field>
             </v-col>
-            <!-- <v-col cols="12 " class="py-0">
-                <div class="d-flex flex-wrap align-center w-100 ">
-                    <v-checkbox hide-details color="primary">
-                        <template v-slot:label class="">Remeber this Device</template>
-</v-checkbox>
-<div class="ml-sm-auto">
-    <RouterLink to="" class="text-primary text-decoration-none text-body-1 opacity-1 font-weight-medium">
-        Forgot Password ?</RouterLink>
-</div>
-</div>
-</v-col> -->
+            <v-col cols="12" v-if="error">
+                <v-alert type="error" dense>{{ error }}</v-alert>
+            </v-col>
             <v-col cols="12">
                 <v-btn size="large" rounded="pill" color="primary" class="rounded-pill" block type="submit"
-                    @click="Login" flat>Sign
-                    In</v-btn>
+                    :loading="isLoading" :disabled="isLoading">
+                    Sign In
+                </v-btn>
             </v-col>
         </v-row>
-    </div>
+    </form>
 </template>

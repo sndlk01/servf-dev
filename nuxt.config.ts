@@ -24,6 +24,9 @@ export default defineNuxtConfig({
   nitro: {
     serveStatic: true,
   },
+  routeRules: {
+    '/admin/**': { middleware: ['auth'] } as any
+  },
   
   sourcemap: { server: true, client: false },
   devServerHandlers: [],
@@ -35,5 +38,10 @@ export default defineNuxtConfig({
         })
       );
     },
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_URL,
+    }
   },
 });

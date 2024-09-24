@@ -28,23 +28,8 @@
 <script setup>
 
 definePageMeta({
-  layout: "admin",
-});
-
-const logout = () => {
-    // Implement logout logic
-    console.log('Logout clicked')
-}
-
-const manageReviews = () => {
-    // Implement review management logic
-    console.log('Manage reviews clicked')
-}
-
-const manageBlogs = () => {
-    // Implement blog management logic
-    console.log('Manage blogs clicked')
-}
+  middleware: 'auth'
+})
 </script>
 
 <style scoped>
