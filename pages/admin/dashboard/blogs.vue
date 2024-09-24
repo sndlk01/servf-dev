@@ -34,22 +34,37 @@
                 <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
                   hide-details></v-text-field>
               </v-card-title>
-              <v-data-table :headers="headers" :items="blogs" :search="search" :items-per-page="5">
-                <template v-slot:item.image="{ item }">
-                  <v-img :src="item.image" max-width="100" max-height="100" contain></v-img>
-                </template>
-                <template v-slot:item.link="{ item }">
-                  <a :href="item.link" target="_blank">{{ item.link }}</a>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                  <v-icon small class="mr-2" @click="editBlog(item)">
-                    mdi-pencil
-                  </v-icon>
-                  <v-icon small @click="deleteBlog(item)">
-                    mdi-delete
-                  </v-icon>
-                </template>
-              </v-data-table>
+              <v-card-text>
+                <table class="blog-table">
+                  <thead>
+                    <tr>
+                      <th>ชื่อบล็อก</th>
+                      <th>รูปภาพ</th>
+                      <th>ลิงก์</th>
+                      <th>การจัดการ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="blog in filteredBlogs" :key="blog.id">
+                      <td>{{ blog.title }}</td>
+                      <td>
+                        <v-img :src="blog.image" max-width="100" max-height="100" contain></v-img>
+                      </td>
+                      <td>
+                        <a :href="blog.link" target="_blank">{{ blog.link }}</a>
+                      </td>
+                      <td>
+                        <v-icon small class="mr-2" @click="editBlog(blog)">
+                          mdi-pencil
+                        </v-icon>
+                        <v-icon small @click="deleteBlog(blog)">
+                          mdi-delete
+                        </v-icon>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -70,8 +85,8 @@
                     <v-textarea v-model="editedItem.content" label="เนื้อหา"></v-textarea>
                   </v-col>
                   <v-col cols="12">
-                    <v-file-input v-model="editedItem.imageFile" label="อัปโหลดรูปภาพใหม่" accept="image/*"
-                      prepend-icon="mdi-camera"></v-file-input>
+                    <v-file-input v-model="newBlog.imageFile" label="อัปโหลดรูปภาพ" accept="image/*"
+                      prepend-icon="mdi-camera" @change="handleFileChange"></v-file-input>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field v-model="editedItem.link" label="ลิงก์"></v-text-field>
@@ -92,41 +107,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const headers = [
-  { title: 'ชื่อบล็อก', align: 'start', key: 'title' },
-  { title: 'รูปภาพ', key: 'image' },
-  { title: 'ลิงก์', key: 'link' },
-  { title: 'วันที่สร้าง', key: 'createdAt' },
-  { title: 'วันที่แก้ไขล่าสุด', key: 'updatedAt' },
-  { title: 'การจัดการ', key: 'actions', sortable: false }
-]
-
-const blogs = ref([
-  {
-    id: 1,
-    title: 'บล็อกแรกของเรา',
-    content: 'เนื้อหาบล็อกแรก...',
-    image: 'https://picsum.photos/200',
-    link: 'https://example.com/blog1',
-    createdAt: '2024-09-20',
-    updatedAt: '2024-09-21'
-  },
-  {
-    id: 2,
-    title: 'เคล็ดลับการท่องเที่ยว',
-    content: 'เนื้อหาเกี่ยวกับการท่องเที่ยว...',
-    image: 'https://picsum.photos/201',
-    link: 'https://example.com/blog2',
-    createdAt: '2024-09-22',
-    updatedAt: '2024-09-22'
-  }
-])
-
+const blogs = ref([])
 const search = ref('')
 const editDialog = ref(false)
 const editedIndex = ref(-1)
@@ -147,62 +133,127 @@ const newBlog = reactive({
   link: ''
 })
 
-const goBack = () => {
-  router.push('/admin') // Assuming '/' is the path to your dashboard
+// Handle file selection and assign it correctly
+const handleFileChange = (file) => {
+  editedItem.imageFile = file; // Ensure this refers to editedItem
+  console.log('File selected:', file);
 }
 
+// Fetch blogs from the database
+const fetchBlogs = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/blogs')
+    const data = await response.json()
+    blogs.value = data.map(blog => ({
+      ...blog,
+      image: `http://localhost:8000${blog.imageUrl}`
+    }))
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
+  }
+}
+
+onMounted(fetchBlogs)
+
+// Filter blogs based on search input
+const filteredBlogs = computed(() => {
+  return blogs.value.filter(blog =>
+    blog.title.toLowerCase().includes(search.value.toLowerCase()) ||
+    blog.content.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
+
+const goBack = () => {
+  router.push('/admin')
+}
+
+// Function to upload image
 const uploadImage = async (file) => {
-  // This is a mock function. In a real application, you would send the file to your server.
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      // Simulating a random image URL returned from the server
-      resolve(`https://picsum.photos/${Math.floor(Math.random() * 1000)}`)
-    }, 1000)
-  })
+  const formData = new FormData()
+  formData.append('image', file)
+
+  try {
+    const response = await fetch('http://localhost:8000/upload', {
+      method: 'POST',
+      body: formData
+    })
+    const data = await response.json()
+    return data.imageUrl
+  } catch (error) {
+    console.error('Error uploading image:', error)
+    return ''
+  }
 }
 
 const addBlog = async () => {
-  let imageUrl = ''
+  let formData = new FormData();
+  formData.append('title', newBlog.title);
+  formData.append('content', newBlog.content);
+  formData.append('link', newBlog.link);
+  
   if (newBlog.imageFile) {
-    imageUrl = await uploadImage(newBlog.imageFile)
+    formData.append('image', newBlog.imageFile);
   }
 
-  const blog = {
-    id: blogs.value.length + 1,
-    title: newBlog.title,
-    content: newBlog.content,
-    image: imageUrl,
-    link: newBlog.link,
-    createdAt: new Date().toISOString().substr(0, 10),
-    updatedAt: new Date().toISOString().substr(0, 10)
+  console.log('FormData contents:');
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
   }
-  blogs.value.push(blog)
-  // Reset the form
-  Object.assign(newBlog, {
-    title: '',
-    content: '',
-    imageFile: null,
-    link: ''
-  })
-}
 
+  try {
+    const response = await fetch('http://localhost:8000/blogs', {
+      method: 'POST',
+      body: formData,
+    });
+
+    console.log('Response status:', response.status);
+    const responseData = await response.json();
+    console.log('Response data:', responseData);
+
+    if (!response.ok) {
+      throw new Error(responseData.error || 'Failed to add blog');
+    }
+
+    blogs.value.push(responseData);
+    
+    Object.assign(newBlog, {
+      title: '',
+      content: '',
+      imageFile: null,
+      link: ''
+    });
+
+    alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว');
+
+  } catch (error) {
+    console.error('Error adding blog:', error);
+    alert(`เกิดข้อผิดพลาดในการเพิ่มบล็อก: ${error.message}`);
+  }
+};
+
+// Edit an existing blog
 const editBlog = (item) => {
   editedIndex.value = blogs.value.indexOf(item)
-  editedItem.id = item.id
-  editedItem.title = item.title
-  editedItem.content = item.content
-  editedItem.imageFile = null // Reset file input
-  editedItem.link = item.link
-  editedItem.createdAt = item.createdAt
-  editedItem.updatedAt = item.updatedAt
+  Object.assign(editedItem, item)
   editDialog.value = true
 }
 
-const deleteBlog = (item) => {
-  const index = blogs.value.indexOf(item)
-  confirm('คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้?') && blogs.value.splice(index, 1)
+// Delete a blog post
+const deleteBlog = async (item) => {
+  if (confirm('คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้?')) {
+    try {
+      await fetch(`http://localhost:8000/blogs/${item.id}`, {
+        method: 'DELETE'
+      })
+      const index = blogs.value.indexOf(item)
+      blogs.value.splice(index, 1)
+    } catch (error) {
+      console.error('Error deleting blog:', error)
+    }
+  }
 }
 
+// Close edit dialog and reset fields
 const closeEdit = () => {
   editDialog.value = false
   editedIndex.value = -1
@@ -217,19 +268,60 @@ const closeEdit = () => {
   })
 }
 
+// Save changes to an edited blog post
 const saveEdit = async () => {
   if (editedIndex.value > -1) {
-    let imageUrl = blogs.value[editedIndex.value].image // Keep the existing image if not changed
+    let imageUrl = blogs.value[editedIndex.value].image;
     if (editedItem.imageFile) {
-      imageUrl = await uploadImage(editedItem.imageFile)
+      imageUrl = await uploadImage(editedItem.imageFile);
     }
 
-    Object.assign(blogs.value[editedIndex.value], {
+    const updatedBlog = {
       ...editedItem,
-      image: imageUrl,
-      updatedAt: new Date().toISOString().substr(0, 10)
-    })
+      image: imageUrl
+    }
+
+    try {
+      const response = await fetch(`http://localhost:8000/blogs/${updatedBlog.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedBlog)
+      })
+      const data = await response.json()
+      Object.assign(blogs.value[editedIndex.value], data)
+    } catch (error) {
+      console.error('Error updating blog:', error)
+    }
   }
   closeEdit()
 }
 </script>
+
+
+<style scoped>
+.blog-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.blog-table th,
+.blog-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.blog-table th {
+  background-color: #f2f2f2;
+}
+
+.blog-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.blog-table tr:hover {
+  background-color: #f5f5f5;
+}
+</style>

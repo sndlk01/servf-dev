@@ -24,7 +24,6 @@
             <v-col cols="12" sm="6" lg="3">
               <AdminEdit
                 title="รีวิวทั้งหมด"
-                :value="totalReviews"
                 button-text="จัดการรีวิว"
                 @button-click="manageReviews"
               />
@@ -33,7 +32,6 @@
             <v-col cols="12" sm="6" lg="3">
               <AdminEdit
                 title="บล็อกทั้งหมด"
-                :value="totalBlogs"
                 button-text="จัดการบล็อก"
                 @button-click="manageBlogs"
               />

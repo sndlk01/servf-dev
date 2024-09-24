@@ -44,7 +44,7 @@ const initializeAdminUser = async () => {
 initializeAdminUser();
 
 // Login route
-app.post('/login', async (req:any, res:any) => {
+app.post('/login', async (req: any, res: any) => {
   const { username, password } = req.body;
 
   try {
@@ -71,7 +71,7 @@ app.post('/login', async (req:any, res:any) => {
 
 
 // Create a new Review
-app.post('/reviews', async (req:any, res:any) => {
+app.post('/reviews', async (req: any, res: any) => {
   const { name, review } = req.body;
   try {
     const newReview = await prisma.review.create({
@@ -84,7 +84,7 @@ app.post('/reviews', async (req:any, res:any) => {
 });
 
 // Update a Review by ID
-app.put('/reviews/:id', async (req:any, res:any) => {
+app.put('/reviews/:id', async (req: any, res: any) => {
   const { id } = req.params;
   const { name, review } = req.body;
 
@@ -101,7 +101,7 @@ app.put('/reviews/:id', async (req:any, res:any) => {
 
 
 // Get all Reviews
-app.get('/reviews', async (req:any, res:any) => {
+app.get('/reviews', async (req: any, res: any) => {
   try {
     const reviews = await prisma.review.findMany();
     res.json(reviews);
@@ -111,7 +111,7 @@ app.get('/reviews', async (req:any, res:any) => {
 });
 
 // Get a Review by ID
-app.get('/reviews/:id', async (req:any, res:any) => {
+app.get('/reviews/:id', async (req: any, res: any) => {
   const { id } = req.params;
   try {
     const review = await prisma.review.findUnique({
@@ -126,6 +126,21 @@ app.get('/reviews/:id', async (req:any, res:any) => {
   }
 });
 
+
+app.delete('/reviews/:id', async (req: any, res: any) => {
+  const { id } = req.params;
+  console.log(`Attempting to delete review with id: ${id}`); // เพิ่ม log
+  try {
+    const deletedReview = await prisma.review.delete({
+      where: { id: parseInt(id) },
+    });
+    console.log('Review deleted:', deletedReview); // เพิ่ม log
+    res.json({ message: 'Review deleted successfully', deletedReview });
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    // res.status(500).json({ error: 'Failed to delete review', details: error.message });
+  }
+});
 
 const UPLOAD_DIR = 'uploads';
 

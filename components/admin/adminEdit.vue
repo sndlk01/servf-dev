@@ -1,11 +1,8 @@
 <template>
-    <v-card class="mx-auto" max-width="344">
-      <v-card-title>
-        {{ title }}
+    <v-card class="mx-auto " max-width="344" style="padding: 2rem;">
+      <v-card-title style="align-items: center; text-align: center; ">
+        <h3>{{ title }}</h3>
       </v-card-title>
-      <v-card-text class="text-h4 text-center">
-        {{ value }}
-      </v-card-text>
       <v-card-actions>
         <v-btn block color="primary" @click="$emit('button-click')">
           {{ buttonText }}
