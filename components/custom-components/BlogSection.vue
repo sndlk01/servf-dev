@@ -21,7 +21,6 @@ onMounted(async () => {
         ...blog,
         imageUrl: `http://localhost:8000${blog.imageUrl}`
       }));
-      // Log the first blog's imageUrl to check its value
       if (blogs.value.length > 0) {
         console.log('First blog imageUrl:', blogs.value[0].imageUrl);
       }
@@ -37,36 +36,7 @@ const handleImageError = (blog: Blog) => {
 };
 </script>
 
-<style>
-.blogs {
-  background: rgb(146, 122, 244);
-  background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%);
-  padding: 4rem 4rem;
-}
 
-.container-blogs {
-  background-color: #fff;
-  padding: 5rem 1rem;
-  border-radius: 2rem;
-}
-
-.blog-image {
-  width: 100%;
-  height: 250px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-@media (max-width: 600px) {
-  .blogs {
-    padding: 2rem 1rem;
-  }
-  .container-blogs {
-    padding: 2rem 0.5rem;
-  }
-}
-</style>
 
 <template>
   <div class="blogs" id="BlogSection">

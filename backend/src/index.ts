@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const bcrypt = require('bcryptjs'); // For password hashing (optional but recommended)
+const bcrypt = require('bcryptjs'); 
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -10,20 +10,19 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Allow only the frontend origin
-  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+  origin: 'http://localhost:3000', 
+  optionsSuccessStatus: 200 
 };
 app.use(cors(corsOptions));
 const prisma = new PrismaClient();
 
-// Initialize default admin credentials in the database
 const initializeAdminUser = async () => {
   const existingAdmin = await prisma.login.findUnique({
     where: { username: 'admin' },
   });
 
   if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash('admin1234', 10); // Hashing the password for security
+    const hashedPassword = await bcrypt.hash('admin1234', 10); 
     await prisma.login.create({
       data: {
         username: 'admin',
@@ -40,7 +39,6 @@ const initializeAdminUser = async () => {
   }
 };
 
-// Call the function to initialize admin credentials
 initializeAdminUser();
 
 // Login route
@@ -56,7 +54,6 @@ app.post('/login', async (req: any, res: any) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Compare provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, userLogin.password);
 
     if (!isPasswordValid) {
@@ -129,12 +126,12 @@ app.get('/reviews/:id', async (req: any, res: any) => {
 
 app.delete('/reviews/:id', async (req: any, res: any) => {
   const { id } = req.params;
-  console.log(`Attempting to delete review with id: ${id}`); // เพิ่ม log
+  console.log(`Attempting to delete review with id: ${id}`);
   try {
     const deletedReview = await prisma.review.delete({
       where: { id: parseInt(id) },
     });
-    console.log('Review deleted:', deletedReview); // เพิ่ม log
+    console.log('Review deleted:', deletedReview); 
     res.json({ message: 'Review deleted successfully', deletedReview });
   } catch (error) {
     console.error('Error deleting review:', error);
@@ -144,7 +141,6 @@ app.delete('/reviews/:id', async (req: any, res: any) => {
 
 const UPLOAD_DIR = 'uploads';
 
-// กำหนดค่า Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(__dirname, UPLOAD_DIR);
@@ -161,30 +157,38 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// สร้าง route สำหรับการเข้าถึงไฟล์สถิต
+// สร้าง route 
 app.use(`/${UPLOAD_DIR}`, express.static(path.join(__dirname, UPLOAD_DIR)));
 
 // ฟังก์ชันสำหรับแปลง file path เป็น URL
 function getImageUrl(imagePath: string | null): string | null {
   if (!imagePath) return null;
-  // ใช้เฉพาะชื่อไฟล์จาก path
   const filename = path.basename(imagePath);
   return `/${UPLOAD_DIR}/${filename}`;
 }
 
 // ฟังก์ชันสำหรับบันทึก path ของรูปภาพ
 function saveImagePath(file: Express.Multer.File | undefined): string | null {
-  if (!file) return null;
-  // เก็บเฉพาะ relative path
+  if (!file) {
+    console.log('No file received in saveImagePath');
+    return null;
+  }
+  console.log('Saving image path:', path.join(UPLOAD_DIR, file.filename));
   return path.join(UPLOAD_DIR, file.filename);
 }
 
 // สร้าง Blog พร้อมอัพโหลดรูปภาพ
 app.post('/blogs', upload.single('image'), async (req: any, res: any) => {
-  const { title, content, link } = req.body;
-  const imagePath = saveImagePath(req.file);
-
+  console.log('Received request body:', req.body);
+  console.log('Received file:', req.file);
   try {
+    if (!req.file) {
+      console.log('No file uploaded');
+    }
+
+    const { title, content, link } = req.body;
+    const imagePath = req.file ? saveImagePath(req.file) : null;
+
     const newBlog = await prisma.blog.create({
       data: {
         title,
@@ -193,16 +197,18 @@ app.post('/blogs', upload.single('image'), async (req: any, res: any) => {
         image: imagePath
       },
     });
+
     res.json({
       ...newBlog,
       imageUrl: getImageUrl(newBlog.image)
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create blog' });
+    console.error('Error creating blog:', error);
+    // res.status(500).json({ error: 'Failed to create blog', details: error.message });
   }
 });
 
-// อัพเดต Blog พร้อมอัพโหลดรูปภาพใหม่ (ถ้ามี)
+// อัพเดต Blog อัพโหลดรูปภาพใหม่ 
 app.put('/blogs/:id', upload.single('image'), async (req: any, res: any) => {
   const { id } = req.params;
   const { title, content, link } = req.body;

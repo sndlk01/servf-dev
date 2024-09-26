@@ -1,4 +1,3 @@
-<!-- BlogManagement.vue -->
 <template>
   <v-app>
     <v-app-bar color="primary" dark app>
@@ -18,8 +17,12 @@
                 <v-form @submit.prevent="addBlog">
                   <v-text-field v-model="newBlog.title" label="ชื่อบล็อก" required></v-text-field>
                   <v-textarea v-model="newBlog.content" label="เนื้อหา" required></v-textarea>
-                  <v-file-input v-model="newBlog.imageFile" label="อัปโหลดรูปภาพ" accept="image/*"
-                    prepend-icon="mdi-camera"></v-file-input>
+                  <v-file-input
+                    v-model="newBlog.imageFile"
+                    label="อัปโหลดรูปภาพ"
+                    accept="image/*"
+                    prepend-icon="mdi-camera"
+                  ></v-file-input>
                   <v-text-field v-model="newBlog.link" label="ลิงก์"></v-text-field>
                   <v-btn type="submit" color="primary" block>เพิ่มบล็อก</v-btn>
                 </v-form>
@@ -31,8 +34,13 @@
               <v-card-title>
                 บล็อกทั้งหมด
                 <v-spacer></v-spacer>
-                <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
-                  hide-details></v-text-field>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="ค้นหา"
+                  single-line
+                  hide-details
+                ></v-text-field>
               </v-card-title>
               <v-card-text>
                 <table class="blog-table">
@@ -85,8 +93,12 @@
                     <v-textarea v-model="editedItem.content" label="เนื้อหา"></v-textarea>
                   </v-col>
                   <v-col cols="12">
-                    <v-file-input v-model="newBlog.imageFile" label="อัปโหลดรูปภาพ" accept="image/*"
-                      prepend-icon="mdi-camera" @change="handleFileChange"></v-file-input>
+                    <v-file-input
+                      v-model="editedItem.imageFile"
+                      label="อัปโหลดรูปภาพ"
+                      accept="image/*"
+                      prepend-icon="mdi-camera"
+                    ></v-file-input>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field v-model="editedItem.link" label="ลิงก์"></v-text-field>
@@ -106,8 +118,9 @@
   </v-app>
 </template>
 
+
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -129,17 +142,18 @@ const editedItem = reactive({
 const newBlog = reactive({
   title: '',
   content: '',
-  imageFile: null,
+  imageFile: null, 
   link: ''
 })
 
-// Handle file selection and assign it correctly
-const handleFileChange = (file) => {
-  editedItem.imageFile = file; // Ensure this refers to editedItem
-  console.log('File selected:', file);
-}
+watch(() => newBlog.imageFile, (newVal) => {
+  if (newVal) {
+    console.log('File selected:', newVal.name)
+  } else {
+    console.log('No file selected')
+  }
+})
 
-// Fetch blogs from the database
 const fetchBlogs = async () => {
   try {
     const response = await fetch('http://localhost:8000/blogs')
@@ -155,7 +169,6 @@ const fetchBlogs = async () => {
 
 onMounted(fetchBlogs)
 
-// Filter blogs based on search input
 const filteredBlogs = computed(() => {
   return blogs.value.filter(blog =>
     blog.title.toLowerCase().includes(search.value.toLowerCase()) ||
@@ -167,78 +180,54 @@ const goBack = () => {
   router.push('/admin')
 }
 
-// Function to upload image
-const uploadImage = async (file) => {
-  const formData = new FormData()
-  formData.append('image', file)
-
-  try {
-    const response = await fetch('http://localhost:8000/upload', {
-      method: 'POST',
-      body: formData
-    })
-    const data = await response.json()
-    return data.imageUrl
-  } catch (error) {
-    console.error('Error uploading image:', error)
-    return ''
-  }
-}
-
+// Add a new blog
 const addBlog = async () => {
-  let formData = new FormData();
-  formData.append('title', newBlog.title);
-  formData.append('content', newBlog.content);
-  formData.append('link', newBlog.link);
-  
-  if (newBlog.imageFile) {
-    formData.append('image', newBlog.imageFile);
-  }
+  let formData = new FormData()
+  formData.append('title', newBlog.title)
+  formData.append('content', newBlog.content)
+  formData.append('link', newBlog.link)
 
-  console.log('FormData contents:');
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
+  if (newBlog.imageFile instanceof File) {
+    formData.append('image', newBlog.imageFile, newBlog.imageFile.name)
+    console.log('Image file added:', newBlog.imageFile.name)
+  } else {
+    console.log('No valid image file selected')
   }
 
   try {
     const response = await fetch('http://localhost:8000/blogs', {
       method: 'POST',
-      body: formData,
-    });
+      body: formData
+    })
 
-    console.log('Response status:', response.status);
-    const responseData = await response.json();
-    console.log('Response data:', responseData);
+    if (response.ok) {
+      const responseData = await response.json()
+      blogs.value.push(responseData)
 
-    if (!response.ok) {
-      throw new Error(responseData.error || 'Failed to add blog');
+      Object.assign(newBlog, {
+        title: '',
+        content: '',
+        imageFile: null,
+        link: ''
+      })
+
+      alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว')
+    } else {
+      const errorData = await response.json()
+      throw new Error(`Failed to add blog: ${errorData.error}`)
     }
-
-    blogs.value.push(responseData);
-    
-    Object.assign(newBlog, {
-      title: '',
-      content: '',
-      imageFile: null,
-      link: ''
-    });
-
-    alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว');
-
   } catch (error) {
-    console.error('Error adding blog:', error);
-    alert(`เกิดข้อผิดพลาดในการเพิ่มบล็อก: ${error.message}`);
+    console.error('Error adding blog:', error)
+    alert(`เกิดข้อผิดพลาดในการเพิ่มบล็อก: ${error.message}`)
   }
-};
+}
 
-// Edit an existing blog
 const editBlog = (item) => {
   editedIndex.value = blogs.value.indexOf(item)
   Object.assign(editedItem, item)
   editDialog.value = true
 }
 
-// Delete a blog post
 const deleteBlog = async (item) => {
   if (confirm('คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้?')) {
     try {
@@ -253,7 +242,6 @@ const deleteBlog = async (item) => {
   }
 }
 
-// Close edit dialog and reset fields
 const closeEdit = () => {
   editDialog.value = false
   editedIndex.value = -1
@@ -271,31 +259,30 @@ const closeEdit = () => {
 // Save changes to an edited blog post
 const saveEdit = async () => {
   if (editedIndex.value > -1) {
-    let imageUrl = blogs.value[editedIndex.value].image;
-    if (editedItem.imageFile) {
-      imageUrl = await uploadImage(editedItem.imageFile);
-    }
+    let formData = new FormData()
+    formData.append('title', editedItem.title)
+    formData.append('content', editedItem.content)
+    formData.append('link', editedItem.link)
 
-    const updatedBlog = {
-      ...editedItem,
-      image: imageUrl
+    if (editedItem.imageFile instanceof File) {
+      formData.append('image', editedItem.imageFile, editedItem.imageFile.name)
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/blogs/${updatedBlog.id}`, {
+      const response = await fetch(`http://localhost:8000/blogs/${editedItem.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedBlog)
+        body: formData
       })
-      const data = await response.json()
-      Object.assign(blogs.value[editedIndex.value], data)
+
+      if (response.ok) {
+        const updatedBlog = await response.json()
+        Object.assign(blogs.value[editedIndex.value], updatedBlog)
+        closeEdit()
+      }
     } catch (error) {
-      console.error('Error updating blog:', error)
+      console.error('Error saving blog:', error)
     }
   }
-  closeEdit()
 }
 </script>
 
