@@ -17,12 +17,8 @@
                 <v-form @submit.prevent="addBlog">
                   <v-text-field v-model="newBlog.title" label="ชื่อบล็อก" required></v-text-field>
                   <v-textarea v-model="newBlog.content" label="เนื้อหา" required></v-textarea>
-                  <v-file-input
-                    v-model="newBlog.imageFile"
-                    label="อัปโหลดรูปภาพ"
-                    accept="image/*"
-                    prepend-icon="mdi-camera"
-                  ></v-file-input>
+                  <v-file-input v-model="newBlog.imageFile" label="อัปโหลดรูปภาพ" accept="image/*"
+                    prepend-icon="mdi-camera"></v-file-input>
                   <v-text-field v-model="newBlog.link" label="ลิงก์"></v-text-field>
                   <v-btn type="submit" color="primary" block>เพิ่มบล็อก</v-btn>
                 </v-form>
@@ -34,13 +30,8 @@
               <v-card-title>
                 บล็อกทั้งหมด
                 <v-spacer></v-spacer>
-                <v-text-field
-                  v-model="search"
-                  append-icon="mdi-magnify"
-                  label="ค้นหา"
-                  single-line
-                  hide-details
-                ></v-text-field>
+                <v-text-field v-model="search" append-icon="mdi-magnify" label="ค้นหา" single-line
+                  hide-details></v-text-field>
               </v-card-title>
               <v-card-text>
                 <table class="blog-table">
@@ -93,12 +84,8 @@
                     <v-textarea v-model="editedItem.content" label="เนื้อหา"></v-textarea>
                   </v-col>
                   <v-col cols="12">
-                    <v-file-input
-                      v-model="editedItem.imageFile"
-                      label="อัปโหลดรูปภาพ"
-                      accept="image/*"
-                      prepend-icon="mdi-camera"
-                    ></v-file-input>
+                    <v-file-input v-model="editedItem.imageFile" label="อัปโหลดรูปภาพ" accept="image/*"
+                      prepend-icon="mdi-camera"></v-file-input>
                   </v-col>
                   <v-col cols="12">
                     <v-text-field v-model="editedItem.link" label="ลิงก์"></v-text-field>
@@ -142,7 +129,7 @@ const editedItem = reactive({
 const newBlog = reactive({
   title: '',
   content: '',
-  imageFile: null, 
+  imageFile: null,
   link: ''
 })
 
@@ -187,12 +174,25 @@ const addBlog = async () => {
   formData.append('content', newBlog.content)
   formData.append('link', newBlog.link)
 
-  if (newBlog.imageFile instanceof File) {
-    formData.append('image', newBlog.imageFile, newBlog.imageFile.name)
-    console.log('Image file added:', newBlog.imageFile.name)
+
+  if (Array.isArray(newBlog.imageFile) && newBlog.imageFile.length > 0) {
+    const imageFile = newBlog.imageFile[0]; // Access the first file in the array
+    if (imageFile instanceof File) {
+      formData.append('image', imageFile, imageFile.name);
+      console.log('Image file added:', imageFile.name);
+    } else {
+      console.log('No valid image file selected');
+    }
   } else {
-    console.log('No valid image file selected')
+    console.log('No file selected');
   }
+
+
+  // Debug: Log the form data to see if it's correctly formed
+  for (let pair of formData.entries()) {
+    console.log(`${pair[0]}, ${pair[1]}`);
+  }
+
 
   try {
     const response = await fetch('http://localhost:8000/blogs', {
@@ -212,6 +212,7 @@ const addBlog = async () => {
       })
 
       alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว')
+      window.location.reload()
     } else {
       const errorData = await response.json()
       throw new Error(`Failed to add blog: ${errorData.error}`)
