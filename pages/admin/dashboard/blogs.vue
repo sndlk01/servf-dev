@@ -265,8 +265,24 @@ const saveEdit = async () => {
     formData.append('content', editedItem.content)
     formData.append('link', editedItem.link)
 
-    if (editedItem.imageFile instanceof File) {
-      formData.append('image', editedItem.imageFile, editedItem.imageFile.name)
+    if (Array.isArray(editedItem.imageFile) && editedItem.imageFile.length > 0) {
+      const imageFile = editedItem.imageFile[0]; // เข้าถึงไฟล์แรกในอาร์เรย์
+      if (imageFile instanceof File) {
+        formData.append('image', imageFile, imageFile.name);
+        console.log('Image file added:', imageFile.name);
+      } else {
+        console.log('No valid image file selected');
+      }
+    } else if (editedItem.imageFile instanceof File) {
+      formData.append('image', editedItem.imageFile, editedItem.imageFile.name);
+      console.log('Image file added:', editedItem.imageFile.name);
+    } else {
+      console.log('No file selected for update');
+    }
+
+    // Debug: แสดงข้อมูลใน formData
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}, ${pair[1]}`);
     }
 
     try {
@@ -279,9 +295,15 @@ const saveEdit = async () => {
         const updatedBlog = await response.json()
         Object.assign(blogs.value[editedIndex.value], updatedBlog)
         closeEdit()
+        alert('บล็อกถูกอัปเดตเรียบร้อยแล้ว')
+        await fetchBlogs() // รีเฟรชข้อมูลบล็อกทั้งหมด
+      } else {
+        const errorData = await response.json()
+        throw new Error(`Failed to update blog: ${errorData.error}`)
       }
     } catch (error) {
-      console.error('Error saving blog:', error)
+      console.error('Error updating blog:', error)
+      alert(`เกิดข้อผิดพลาดในการอัปเดตบล็อก: ${error.message}`)
     }
   }
 }
