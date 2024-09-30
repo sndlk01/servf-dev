@@ -463,19 +463,19 @@ import tiktok from '/images/icons/10.png';
 const Iconsdata: Contact[] = [
 
   {
-    url: "https://www.facebook.com/",
+    url: "https://www.facebook.com/profile.php?id=61563551153300",
     img: facebook,
   },
   {
-    url: "https://www.instagram.com/",
+    url: "https://www.instagram.com/servf_official?igsh=MXBmN3Mwb2M1c3A3cQ%3D%3D",
     img: instagram,
   },
   {
-    url: "https://account.line.biz/login?redirectUri=https%3A%2F%2Fmanager.line.biz%2F",
+    url: "https://line.me/R/ti/p/@842vmgfm?from=page&searchId=842vmgfm",
     img: line,
   },
   {
-    url: "https://www.tiktok.com/",
+    url: "https://www.tiktok.com/@servf.official?_t=8q8vUD4ges4&_r=1",
     img: tiktok,
   },
 ];
