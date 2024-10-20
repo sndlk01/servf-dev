@@ -44,6 +44,7 @@ const scrollToTestimonials = () => {
                     <p class="text-h1 mb-6" style="">Simple way to find your</p>
                     <p class="text-friend mb-6">FRIENDS</p>
                     <p class="text-body-1 mb-8">SERVF บริการหาเพื่อนไปทำกิจกรรมต่าง ๆ ร่วมกัน</p>
+                    <p class="text-body-1 mb-8">รวมไปถึงหาที่ปรึกษาเฉพาะด้านหรือปัญหาอื่นๆ</p>
                     <v-btn variant="flat" color="white" size="large" class="px-9" style="color: #7a0eb0;"
                         @click="scrollToTestimonials">
                         Learn more
