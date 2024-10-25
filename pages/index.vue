@@ -28,7 +28,7 @@ const submitForm = async () => {
 
         const response = await emailjs.send(
             'service_1o9sszw',
-            'template_g2wmh2b',
+            'template_enez5gl',
             templateParams,
             'wLrtgS0s_mjQ5LMau'
         );
