@@ -30,7 +30,8 @@
             .v-list-item-title {
                 font-weight: 400;
                 font-size: 1rem;
-                color: rgba(var(--v-theme-dark));
+                color: aliceblue !important;
+                // color: rgba(var(--v-theme-dark));
             }
         }
 
@@ -39,11 +40,9 @@
 
             .v-list-item {
                 &:hover {
-                    color: rgb(var(--v-theme-primary));
+                    color:  #977cf0 !important;
                     background: rgb(var(--v-theme-lightprimary));
-                    .v-list-item-title{
-                        color: rgb(var(--v-theme-primary));
-                    }
+                    
                     .v-list-item__overlay{
                         opacity: 0;
                     }

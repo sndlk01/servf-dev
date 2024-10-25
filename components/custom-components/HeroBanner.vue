@@ -13,7 +13,32 @@ const scrollToTestimonials = () => {
 .corporate-banner {
     background: rgb(146, 122, 244);
     background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%);
-    margin-top: 7.95rem !important;
+    min-height: 600px; /* ตั้งค่าความสูงขั้นต่ำสำหรับ desktop */
+    display: flex;
+    align-items: center;
+}
+
+/* สำหรับจอคอมพิวเตอร์ */
+@media screen and (min-width: 1025px) {
+    .corporate-banner {
+        height: 100vh;
+    }
+}
+
+/* สำหรับไอแพด */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .corporate-banner {
+        margin-top: 7.95rem !important;
+        min-height: auto; /* หรือกำหนดค่าที่เหมาะสม */
+    }
+}
+
+/* สำหรับโทรศัพท์มือถือ */
+@media screen and (max-width: 767px) {
+    .corporate-banner {
+        margin-top: 7.95rem !important;
+        min-height: auto; /* หรือกำหนดค่าที่เหมาะสม */
+    }
 }
 
 .text-h1 {
