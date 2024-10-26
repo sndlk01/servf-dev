@@ -28,7 +28,7 @@ const scrollToTestimonials = () => {
 /* สำหรับไอแพด */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
     .corporate-banner {
-        margin-top: 7.95rem !important;
+        /* margin-top: 7.95rem !important; */
         min-height: auto; /* หรือกำหนดค่าที่เหมาะสม */
     }
 }
@@ -36,7 +36,7 @@ const scrollToTestimonials = () => {
 /* สำหรับโทรศัพท์มือถือ */
 @media screen and (max-width: 767px) {
     .corporate-banner {
-        margin-top: 7.95rem !important;
+        /* margin-top: 7.95rem !important; */
         min-height: auto; /* หรือกำหนดค่าที่เหมาะสม */
     }
 }
