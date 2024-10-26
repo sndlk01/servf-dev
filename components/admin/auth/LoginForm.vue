@@ -13,7 +13,7 @@ const isLoading = ref(false)
 const isLoggedIn = useState('isLoggedIn', () => false) // Initialize to false
 
 // const API_URL = 'http://localhost:8000' 
-const API_URL = `${process.env.API_URL}`;// Update this if your backend URL is different
+const API_URL = useRuntimeConfig().public.apiBase
 
 const login = async () => {
     error.value = ''

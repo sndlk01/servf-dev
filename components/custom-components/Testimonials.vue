@@ -56,10 +56,15 @@
     review: string;
   }
   
-  const API_URL = `${process.env.API_URL}`;
-  // const REVIEWS_URL = `${process.env.API_URL}/reviews`;
-  // Fetch reviews from the existing API
-  const { data: reviews } = await useFetch<Review[]>('API_URL');
+  const API_URL = useRuntimeConfig().public.apiBase
+  
+  const { data: reviews, error } = await useFetch<Review[]>(`${API_URL}/reviews`, {
+  key: 'reviews',
+  // Add error handling
+  onResponseError: (error) => {
+    console.error('Error fetching reviews:', error);
+  }
+});
   
   const display = useDisplay();
   const currentSlide = ref(0);

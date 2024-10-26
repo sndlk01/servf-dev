@@ -110,7 +110,7 @@
 import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-const API_URL = `${process.env.API_URL}`;
+const API_URL = useRuntimeConfig().public.apiBase
 const router = useRouter()
 
 const blogs = ref([])

@@ -99,8 +99,8 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 const router = useRouter()
-const API_URL = `${process.env.API_URL}/reviews`;
-// const API_URL = 'http://localhost:8000/reviews'
+const config = useRuntimeConfig()
+const API_URL = `${config.public.apiBase}/reviews`
 
 const error = ref(null)
 const reviews = ref([])
@@ -154,8 +154,11 @@ const addReview = async () => {
     const response = await axios.post(API_URL, newReview)
     reviews.value.push(response.data)
     Object.assign(newReview, { name: '', review: '' })
-  } catch (error) {
-    console.error('Error adding review:', error)
+    // Add success notification
+    alert('เพิ่มรีวิวสำเร็จ')
+  } catch (err) {
+    console.error('Error adding review:', err)
+    error.value = 'ไม่สามารถเพิ่มรีวิวได้ กรุณาลองใหม่อีกครั้ง'
   }
 }
 
@@ -170,10 +173,9 @@ const deleteReview = async (item) => {
     try {
       await axios.delete(`${API_URL}/${item.id}`)
       reviews.value = reviews.value.filter(review => review.id !== item.id)
-      // เพิ่มการแจ้งเตือนเมื่อลบรีวิวสำเร็จ
       alert('ลบรีวิวสำเร็จ')
-    } catch (error) {
-      console.error('Error deleting review:', error)
+    } catch (err) {
+      console.error('Error deleting review:', err)
       error.value = 'ไม่สามารถลบรีวิวได้ กรุณาลองใหม่อีกครั้ง'
     }
   }
@@ -191,8 +193,11 @@ const saveEdit = async () => {
       const response = await axios.put(`${API_URL}/${editedItem.id}`, editedItem)
       Object.assign(reviews.value[editedIndex.value], response.data)
       closeEdit()
-    } catch (error) {
-      console.error('Error updating review:', error)
+      // Add success notification
+      alert('แก้ไขรีวิวสำเร็จ')
+    } catch (err) {
+      console.error('Error updating review:', err)
+      error.value = 'ไม่สามารถแก้ไขรีวิวได้ กรุณาลองใหม่อีกครั้ง'
     }
   }
 }

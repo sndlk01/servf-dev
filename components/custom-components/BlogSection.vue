@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
+
 interface Blog {
   id: number;
   title: string;
@@ -12,24 +13,35 @@ interface Blog {
 
 const blogs = ref<Blog[]>([]);
 const imageError = ref(false);
-const API_URL = `${process.env.API_URL}`;
+const API_URL = useRuntimeConfig().public.apiBase
 
 
 onMounted(async () => {
   try {
-    const { data } = await useFetch<Blog[]>('API_URL');
-    if (data.value) {
-      blogs.value = data.value.map(blog => ({
+    // Use the API_URL directly in the fetch URL string
+    const { data: responseData } = await useFetch<Blog[]>(`${API_URL}/blogs`);
+
+    // Check if responseData.value exists and is an array
+    if (responseData.value && Array.isArray(responseData.value)) {
+      blogs.value = responseData.value.map((blog: Blog) => ({
         ...blog,
-        imageUrl: `${API_URL}${blog.imageUrl}`
+        imageUrl: blog.imageUrl.startsWith('http') 
+          ? blog.imageUrl 
+          : `${API_URL}${blog.imageUrl}`
       }));
-      // Log the first blog's imageUrl to check its value
+
+      // Debug logging
       if (blogs.value.length > 0) {
         console.log('First blog imageUrl:', blogs.value[0].imageUrl);
+        console.log('Total blogs fetched:', blogs.value.length);
       }
+    } else {
+      console.error('Invalid response data format:', responseData.value);
+      blogs.value = []; // Set empty array as fallback
     }
   } catch (error) {
     console.error('Error fetching blogs:', error);
+    blogs.value = []; // Set empty array on error
   }
 });
 
