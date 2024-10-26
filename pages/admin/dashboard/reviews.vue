@@ -99,7 +99,8 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 const router = useRouter()
-const API_URL = 'http://localhost:8000/reviews'
+const API_URL = `${process.env.API_URL}/reviews`;
+// const API_URL = 'http://localhost:8000/reviews'
 
 const error = ref(null)
 const reviews = ref([])

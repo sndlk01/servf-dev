@@ -110,6 +110,7 @@
 import { ref, reactive, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+const API_URL = `${process.env.API_URL}`;
 const router = useRouter()
 
 const blogs = ref([])
@@ -143,11 +144,11 @@ watch(() => newBlog.imageFile, (newVal) => {
 
 const fetchBlogs = async () => {
   try {
-    const response = await fetch('http://localhost:8000/blogs')
+    const response = await fetch(`${API_URL}/blogs`)
     const data = await response.json()
     blogs.value = data.map(blog => ({
       ...blog,
-      image: `http://localhost:8000${blog.imageUrl}`
+      image: `${process.env.API_URL}${blog.imageUrl}`
     }))
   } catch (error) {
     console.error('Error fetching blogs:', error)
@@ -195,7 +196,7 @@ const addBlog = async () => {
 
 
   try {
-    const response = await fetch('http://localhost:8000/blogs', {
+    const response = await fetch('${process.env.API_URL}/blogs', {
       method: 'POST',
       body: formData
     })
@@ -232,7 +233,7 @@ const editBlog = (item) => {
 const deleteBlog = async (item) => {
   if (confirm('คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้?')) {
     try {
-      await fetch(`http://localhost:8000/blogs/${item.id}`, {
+      await fetch(`${process.env.API_URL}/blogs/${item.id}`, {
         method: 'DELETE'
       })
       const index = blogs.value.indexOf(item)
@@ -286,7 +287,7 @@ const saveEdit = async () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8000/blogs/${editedItem.id}`, {
+      const response = await fetch(`${process.env.API_URL}/blogs/${editedItem.id}`, {
         method: 'PUT',
         body: formData
       })

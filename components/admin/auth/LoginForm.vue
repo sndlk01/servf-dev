@@ -12,7 +12,8 @@ const isLoading = ref(false)
 // Nuxt global state for login status
 const isLoggedIn = useState('isLoggedIn', () => false) // Initialize to false
 
-const API_URL = 'http://localhost:8000' // Update this if your backend URL is different
+// const API_URL = 'http://localhost:8000' 
+const API_URL = `${process.env.API_URL}`;// Update this if your backend URL is different
 
 const login = async () => {
     error.value = ''

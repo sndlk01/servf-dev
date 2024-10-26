@@ -12,14 +12,16 @@ interface Blog {
 
 const blogs = ref<Blog[]>([]);
 const imageError = ref(false);
+const API_URL = `${process.env.API_URL}`;
+
 
 onMounted(async () => {
   try {
-    const { data } = await useFetch<Blog[]>('http://localhost:8000/blogs');
+    const { data } = await useFetch<Blog[]>('API_URL');
     if (data.value) {
       blogs.value = data.value.map(blog => ({
         ...blog,
-        imageUrl: `http://localhost:8000${blog.imageUrl}`
+        imageUrl: `${API_URL}${blog.imageUrl}`
       }));
       // Log the first blog's imageUrl to check its value
       if (blogs.value.length > 0) {

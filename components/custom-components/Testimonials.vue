@@ -56,8 +56,10 @@
     review: string;
   }
   
+  const API_URL = `${process.env.API_URL}`;
+  // const REVIEWS_URL = `${process.env.API_URL}/reviews`;
   // Fetch reviews from the existing API
-  const { data: reviews } = await useFetch<Review[]>('http://localhost:8000/reviews');
+  const { data: reviews } = await useFetch<Review[]>('API_URL');
   
   const display = useDisplay();
   const currentSlide = ref(0);
