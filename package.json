@@ -2,7 +2,7 @@
   "name": "landingpro",
   "private": true,
   "scripts": {
-    "api": "node backend/src/index.ts",
+    "api": "bun run backend/src/index.ts",
     "start": "nuxt start",
     "build": "nuxt build",
     "dev": "nuxt dev",
