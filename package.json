@@ -2,9 +2,10 @@
   "name": "landingpro",
   "private": true,
   "scripts": {
+    "api": "node backend/src/index.ts",
+    "start": "nuxt start",
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "start": "nuxt-start",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
