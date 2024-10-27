@@ -6,6 +6,7 @@ const { resolve } = createResolver(import.meta.url);
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+
   typescript: {
     shim: false,
   },
@@ -14,22 +15,27 @@ export default defineNuxtConfig({
     //   extractCSS: false,
     transpile: ["vuetify"],
   },
+
   modules: ["@pinia/nuxt"],
+
   app: {
     head: {
       title:
         "SERVF",
     },
   },
+
   nitro: {
     serveStatic: true,
   },
+
   routeRules: {
     '/admin/**': { middleware: ['auth'] } as any
   },
-  
+
   sourcemap: { server: true, client: false },
   devServerHandlers: [],
+
   hooks: {
     "vite:extendConfig": (config: any) => {
       config.plugins.push(
@@ -39,9 +45,12 @@ export default defineNuxtConfig({
       );
     },
   },
+
   runtimeConfig: {
     public: {
       apiBase: process.env.API_URL,
     }
   },
+
+  compatibilityDate: "2024-10-27",
 });

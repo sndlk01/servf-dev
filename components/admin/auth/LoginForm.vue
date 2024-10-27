@@ -26,11 +26,12 @@ const login = async () => {
     }
 
     try {
-        const response = await axios.post(`${API_URL}/login`, {
+        const response = await axios.post(`${API_URL}login`, {
             username: username.value,
             password: password.value
         });
 
+        console.log(API_URL)
         console.log('Login response:', response.data);
 
         if (response.data && response.data.message === 'Login successful') {
