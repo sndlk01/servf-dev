@@ -12,6 +12,7 @@
   },
   "scripts": {
     "start": "bun run src/index.ts",
+    "heroku-postbuild": "npm install -g bun && bun install",
     "dev": "bun --watch run src/index.ts"
   },
   "peerDependencies": {
