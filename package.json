@@ -17,6 +17,7 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@mdi/font": "7.2.96",
+    "nuxt": "^3.3.3",
     "@nuxt/vite-builder": "3.3.3",
     "@nuxtjs/vuetify": "^1.12.3",
     "@pinia/nuxt": "0.4.7",
