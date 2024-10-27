@@ -94,7 +94,7 @@ const submitForm = async () => {
             </v-card-actions>
         </v-card>
     </div>
-</template>
+</template> 
 
 <style scoped>
 .chat-container {

@@ -76,7 +76,7 @@ app.post('/reviews', async (req: any, res: any) => {
     });
     res.json(newReview);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create review' });
+    res.status(500).json({ error: 'Failed to create review1' });
   }
 });
 
