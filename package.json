@@ -45,5 +45,8 @@
     "vue3-perfect-scrollbar": "1.6.1",
     "vuedraggable": "2.24.3",
     "vuetify": "3.1.13"
+  },
+  "engines": {
+    "node": "18.20.4"
   }
 }
