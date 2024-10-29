@@ -106,9 +106,9 @@
   </v-app>
 </template>
 
+
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
-
 const router = useRouter()
 const config = useRuntimeConfig()
 const API_URL = `${config.public.apiBase}`
