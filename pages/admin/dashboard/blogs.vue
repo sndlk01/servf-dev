@@ -108,10 +108,10 @@
 
 <script setup>
 import { ref, reactive, onMounted, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
 
-const API_URL = useRuntimeConfig().public.apiBase
 const router = useRouter()
+const config = useRuntimeConfig()
+const API_URL = `${config.public.apiBase}`
 
 const blogs = ref([])
 const search = ref('')
@@ -148,7 +148,7 @@ const fetchBlogs = async () => {
     const data = await response.json()
     blogs.value = data.map(blog => ({
       ...blog,
-      image: `${process.env.API_URL}${blog.imageUrl}`
+      image: `${API_URL}${blog.imageUrl}`
     }))
   } catch (error) {
     console.error('Error fetching blogs:', error)
@@ -170,59 +170,43 @@ const goBack = () => {
 
 // Add a new blog
 const addBlog = async () => {
-  let formData = new FormData()
-  formData.append('title', newBlog.title)
-  formData.append('content', newBlog.content)
-  formData.append('link', newBlog.link)
-
+  let formData = new FormData();
+  formData.append('title', newBlog.title);
+  formData.append('content', newBlog.content);
+  formData.append('link', newBlog.link);
 
   if (Array.isArray(newBlog.imageFile) && newBlog.imageFile.length > 0) {
-    const imageFile = newBlog.imageFile[0]; // Access the first file in the array
+    const imageFile = newBlog.imageFile[0];
     if (imageFile instanceof File) {
       formData.append('image', imageFile, imageFile.name);
-      console.log('Image file added:', imageFile.name);
-    } else {
-      console.log('No valid image file selected');
     }
-  } else {
-    console.log('No file selected');
   }
-
-
-  // Debug: Log the form data to see if it's correctly formed
-  for (let pair of formData.entries()) {
-    console.log(`${pair[0]}, ${pair[1]}`);
-  }
-
 
   try {
-    const response = await fetch('${process.env.API_URL}/blogs', {
+    const response = await fetch(`${API_URL}/blogs`, { // Use backticks for template literals
       method: 'POST',
       body: formData
-    })
-
+    });
     if (response.ok) {
-      const responseData = await response.json()
-      blogs.value.push(responseData)
-
+      const responseData = await response.json();
+      blogs.value.push(responseData);
       Object.assign(newBlog, {
         title: '',
         content: '',
         imageFile: null,
         link: ''
-      })
-
-      alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว')
-      window.location.reload()
+      });
+      alert('บล็อกถูกเพิ่มเรียบร้อยแล้ว');
+      window.location.reload();
     } else {
-      const errorData = await response.json()
-      throw new Error(`Failed to add blog: ${errorData.error}`)
+      const errorText = await response.text();
+      alert(`Failed to add blog: ${errorText}`);
     }
   } catch (error) {
-    console.error('Error adding blog:', error)
-    alert(`เกิดข้อผิดพลาดในการเพิ่มบล็อก: ${error.message}`)
+    alert(`Failed to add blog: ${error.message}`);
   }
-}
+};
+
 
 const editBlog = (item) => {
   editedIndex.value = blogs.value.indexOf(item)
@@ -233,7 +217,7 @@ const editBlog = (item) => {
 const deleteBlog = async (item) => {
   if (confirm('คุณแน่ใจหรือไม่ที่จะลบบล็อกนี้?')) {
     try {
-      await fetch(`${process.env.API_URL}/blogs/${item.id}`, {
+      await fetch(`${API_URL}/blogs/${item.id}`, {
         method: 'DELETE'
       })
       const index = blogs.value.indexOf(item)
@@ -287,7 +271,7 @@ const saveEdit = async () => {
     }
 
     try {
-      const response = await fetch(`${process.env.API_URL}/blogs/${editedItem.id}`, {
+      const response = await fetch(`${API_URL}/blogs/${editedItem.id}`, {
         method: 'PUT',
         body: formData
       })
