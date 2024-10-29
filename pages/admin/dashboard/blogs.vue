@@ -252,7 +252,7 @@ const saveEdit = async () => {
     formData.append('link', editedItem.link)
 
     if (Array.isArray(editedItem.imageFile) && editedItem.imageFile.length > 0) {
-      const imageFile = editedItem.imageFile[0]; // เข้าถึงไฟล์แรกในอาร์เรย์
+      const imageFile = editedItem.imageFile[0]; 
       if (imageFile instanceof File) {
         formData.append('image', imageFile, imageFile.name);
         console.log('Image file added:', imageFile.name);
