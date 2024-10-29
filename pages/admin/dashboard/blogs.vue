@@ -25,7 +25,7 @@
               </v-card-text>
             </v-card>
           </v-col>
-          
+
           <v-col cols="12" md="8">
             <v-card>
               <v-card-title>
@@ -113,11 +113,11 @@ import { ref, reactive, onMounted, computed, watch } from 'vue'
 const router = useRouter()
 const config = useRuntimeConfig()
 const API_URL = `${config.public.apiBase}`
-
 const blogs = ref([])
 const search = ref('')
 const editDialog = ref(false)
 const editedIndex = ref(-1)
+
 const editedItem = reactive({
   id: null,
   title: '',
