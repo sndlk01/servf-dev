@@ -187,6 +187,7 @@ const addBlog = async () => {
       method: 'POST',
       body: formData
     });
+    
     if (response.ok) {
       const responseData = await response.json();
       blogs.value.push(responseData);
