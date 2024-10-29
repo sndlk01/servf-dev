@@ -183,11 +183,11 @@ const addBlog = async () => {
   }
 
   try {
-    const response = await fetch(`${API_URL}/blogs`, { // Use backticks for template literals
+    const response = await fetch(`${API_URL}/blogs`, { 
       method: 'POST',
       body: formData
     });
-    
+
     if (response.ok) {
       const responseData = await response.json();
       blogs.value.push(responseData);
