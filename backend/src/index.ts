@@ -7,15 +7,20 @@ import fs from 'fs';
 import cors from 'cors';
 const app = express();
 
+
 app.use(express.json());
 
 const corsOptions = {
-  origin: '*', 
-  optionsSuccessStatus: 200 
+  origin: ['https://www.servfofficial.com', 'http://localhost:3000'], 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
 };
-app.use(cors(corsOptions));
-const prisma = new PrismaClient();
 
+
+app.use(cors(corsOptions));
+
+const prisma = new PrismaClient();
 const initializeAdminUser = async () => {
   const existingAdmin = await prisma.login.findUnique({
     where: { username: 'admin' },
