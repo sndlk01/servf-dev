@@ -11,10 +11,8 @@ const app = express();
 app.use(express.json());
 
 const corsOptions = {
-  origin: ['https://www.servfofficial.com', 'http://localhost:3000'], 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  optionsSuccessStatus: 200
+  origin: '*', 
+  optionsSuccessStatus: 200 
 };
 
 app.use(cors(corsOptions));
