@@ -1,51 +1,49 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
+import { Blog as BlogData } from '../../_mockApis/custom-components/index';
 
+interface BlogImageType {
+  default?: string;
+  src?: string;
+}
 
-interface Blog {
+interface BlogType {
   id: number;
   title: string;
-  content: string;
-  image: string;
+  desc: string;
+  badge: string;
+  date: string;
+  view: string;
+  name: string;
+  img: string | BlogImageType;
   imageUrl: string;
   link: string;
 }
 
-const blogs = ref<Blog[]>([]);
-const imageError = ref(false);
-const API_URL = useRuntimeConfig().public.apiBase
-
-
-onMounted(async () => {
-  try {
-    // Use the API_URL directly in the fetch URL string
-    const { data: responseData } = await useFetch<Blog[]>(`${API_URL}/blogs`);
-
-    // Check if responseData.value exists and is an array
-    if (responseData.value && Array.isArray(responseData.value)) {
-      blogs.value = responseData.value.map((blog: Blog) => ({
-        ...blog,
-        imageUrl: blog.imageUrl.startsWith('http') 
-          ? blog.imageUrl 
-          : `${API_URL}${blog.imageUrl}`
-      }));
-
-      // Debug logging
-      if (blogs.value.length > 0) {
-        console.log('First blog imageUrl:', blogs.value[0].imageUrl);
-        console.log('Total blogs fetched:', blogs.value.length);
-      }
-    } else {
-      console.error('Invalid response data format:', responseData.value);
-      blogs.value = []; // Set empty array as fallback
-    }
-  } catch (error) {
-    console.error('Error fetching blogs:', error);
-    blogs.value = []; // Set empty array on error
+// แปลงข้อมูลจาก BlogData และเพิ่ม link และ imageUrl
+const blogs = ref<BlogType[]>(BlogData.map(blog => {
+  // กำหนด URL ของรูปภาพตามรูปแบบข้อมูล
+  let imageUrl = '';
+  if (typeof blog.img === 'string') {
+    imageUrl = blog.img;
+  } else if (blog.img && typeof blog.img === 'object') {
+    // ถ้า blog.img เป็น object จาก import (เช่น blog1, blog2)
+    const imgObj = blog.img as BlogImageType;
+    imageUrl = imgObj.default || imgObj.src || '';
   }
-});
 
-const handleImageError = (blog: Blog) => {
+  return {
+    ...blog,
+    // เพิ่ม link โดยใช้ id เป็น path parameter
+    link: `/blog/${blog.id}`,
+    // กำหนด imageUrl
+    imageUrl
+  };
+}));
+
+const imageError = ref(false);
+
+const handleImageError = (blog: BlogType) => {
   console.error(`Failed to load image for blog: ${blog.title}`);
   imageError.value = true;
 };
@@ -104,7 +102,11 @@ const handleImageError = (blog: Blog) => {
                   {{ blogs[0].title }}
                 </NuxtLink>
               </h5>
-              <p class="text-muted text-subtitle-1 font-weight-regular mb-3">{{ blogs[0].content }}</p>
+              <p class="text-muted text-subtitle-1 font-weight-regular mb-3">{{ blogs[0].desc }}</p>
+              <div class="d-flex align-center mt-4">
+                <small class="text-muted">{{ blogs[0].date }}</small>
+                <div class="ml-auto text-muted">{{ blogs[0].view }}</div>
+              </div>
             </div>
           </v-card>
         </v-col>
@@ -131,6 +133,9 @@ const handleImageError = (blog: Blog) => {
                         {{ blog.title }}
                       </NuxtLink>
                     </h6>
+                    <div class="d-flex align-center">
+                      <small class="text-muted">{{ blog.date }}</small>
+                    </div>
                   </v-col>
                 </v-row>
               </v-card>

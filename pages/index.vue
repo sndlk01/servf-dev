@@ -7,6 +7,7 @@ import BuildFeature from '@/components/custom-components/BuildFeature.vue';
 import Blog from '@/components/custom-components/BlogSection.vue';
 import Testimonials from '@/components/custom-components/Testimonials.vue';
 import Contact from '@/components/custom-components/Contact.vue';
+import Team from '~/components/custom-components/Team.vue';
 
 const chatOpen = ref(false);
 const name = ref('');
@@ -53,8 +54,9 @@ const submitForm = async () => {
 <template>
     <Header />
     <HeroBanner id="hero" />
-    <Testimonials id="testimonials" />
     <BuildFeature id="features" />
+    <Team id="team"/>
+    <Testimonials id="testimonials" />
     <Blog id="blog" />
     <Contact id="contact" />
 

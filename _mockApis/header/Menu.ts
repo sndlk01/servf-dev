@@ -14,13 +14,18 @@ const sidebarItem: menu[] = [
         
     },
     {
-        title: 'Review',
-        componentId:'testimonials'
-    },
-    {
         title: 'About Us',
         componentId:'features'
     },
+    {
+        title: 'Booking',
+        componentId:'team'
+    },
+    {
+        title: 'Review',
+        componentId:'testimonials'
+    },
+    
     {
         title: 'Contact Us',
         componentId: 'contact'

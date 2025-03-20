@@ -6,10 +6,22 @@ const { resolve } = createResolver(import.meta.url);
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
-
+  vite: {
+    // ปิดการใช้งาน vite-plugin-inspect โดยตรง
+    optimizeDeps: {
+      exclude: ['vite-plugin-inspect']
+    },
+    build: {
+      // เพิ่มการตั้งค่าเพื่อข้ามปลั๊กอิน
+      rollupOptions: {
+        external: ['vite-plugin-inspect']
+      }
+    }
+  },
   typescript: {
     shim: false,
   },
+  devtools: { enabled: false },
 
   build: {
     //   extractCSS: false,
@@ -25,8 +37,16 @@ export default defineNuxtConfig({
     },
   },
 
+   
   nitro: {
     serveStatic: true,
+    esbuild: {
+      options: {
+        target: 'esnext'
+      }
+    },
+    // เพิ่มตรงนี้
+    moduleSideEffects: ['cookie-es']
   },
 
   routeRules: {
