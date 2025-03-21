@@ -34,6 +34,8 @@ import { Iconsdata } from '@/_mockApis/custom-components/index';
                     <div class="text-contact text-dark">
                         <h3>SERVF OFFICIAL</h3>
                         <p>ช่องทางสำหรับติดต่อสอบถามรายละเอียดเพิ่มเติมเกี่ยวกับบริการของเรา <br>
+                            Tel : 062-475-3129
+                            <br>
                             E-mail : servfofficial@gmail.com
                         </p>
                     </div>

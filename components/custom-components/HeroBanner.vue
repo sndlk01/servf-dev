@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 
 const scrollToTestimonials = () => {
-    const testimonialsElement = document.getElementById('testimonials');
+    const testimonialsElement = document.getElementById('team');
     if (testimonialsElement) {
         testimonialsElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -11,8 +11,9 @@ const scrollToTestimonials = () => {
 
 <style>
 .corporate-banner {
-    background: rgb(146, 122, 244);
-    background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%);
+    /* background: rgb(146, 122, 244);
+    background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%); */
+    background: linear-gradient(90deg, #8872fb, #a08af7, #af96f2, #bfa0ee, #dcacde, #e1acd8, #eea8cc);
     min-height: 600px; /* ตั้งค่าความสูงขั้นต่ำสำหรับ desktop */
     display: flex;
     align-items: center;
@@ -44,7 +45,7 @@ const scrollToTestimonials = () => {
 .text-h1 {
     font-size: 5rem !important;
     line-height: 1;
-    color: #000 !important;
+    color: #ffffff !important;
     letter-spacing: 2px !important;
 }
 
@@ -53,7 +54,7 @@ const scrollToTestimonials = () => {
     font-style: italic;
     font-weight: bold;
     line-height: 1;
-    color: #f7c3ff !important;
+    color: #ffedb9 !important;
 }
 
 .text-body-1 {
@@ -67,12 +68,12 @@ const scrollToTestimonials = () => {
             <v-row class="align-center justify-space-between">
                 <v-col cols="12" md="5">
                     <p class="text-h1 mb-6" style="">Simple way to find your</p>
-                    <p class="text-friend mb-6">FRIENDS</p>
+                    <p class="text-friend mb-6">CONSULTANTS</p>
                     <p class="text-body-1 mb-8">SERVF บริการหาเพื่อนไปทำกิจกรรมต่าง ๆ ร่วมกัน <br>รวมไปถึงหาที่ปรึกษาเฉพาะด้านหรือปัญหาอื่นๆ</p>
                     <!-- <p class="text-body-1 mb-8">รวมไปถึงหาที่ปรึกษาเฉพาะด้านหรือปัญหาอื่นๆ</p> -->
                     <v-btn variant="flat" color="white" size="large" class="px-9" style="color: #7a0eb0;"
                         @click="scrollToTestimonials">
-                        Learn more
+                        Booking Now
                     </v-btn>
                 </v-col>
                 <v-col cols="12" md="6" class="d-flex justify-content-end align-items-end w-100">

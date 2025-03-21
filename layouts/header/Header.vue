@@ -75,7 +75,9 @@ const scrollToComponent = (componentId: string) => {
 <style>
 .header.white-header .v-app-bar.v-toolbar {
   background: rgb(146, 122, 244) !important;
-  background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%) !important;
+  /* background: linear-gradient(90deg, rgba(146, 122, 244, 1) 0%, rgba(250, 164, 177, 1) 100%) !important; */
+  background: linear-gradient(90deg, #8872fb, #a08af7, #af96f2, #bfa0ee, #dcacde, #e1acd8, #eea8cc) !important;
+
 }
 
 .header .v-app-bar .v-list .v-list-item {

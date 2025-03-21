@@ -23,33 +23,37 @@ const ServicesData: Services[] = [
 ]
 
 //Build Features
+import icons1 from '/images/blog-grid/17.png';
+import icons2 from '/images/blog-grid/18.png';
+import icons3 from '/images/blog-grid/19.png';
+import icons4 from '/images/blog-grid/20.png';
+
 
 const BuildFeaturesData: BuildFeatures[] = [
   {
-    icon: SearchIcon,
-    title: 'Easy to find friends',
+    image: icons1,
+    title: 'Easy to find consultants',
     desc: 'Lorem ipsum dolor sit amet, consect etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     link: '/',
   },
   {
-    icon: HeartIcon,
-    title: 'Best take care',
+    image: icons2,
+    title: 'Reliable',
     desc: 'Lorem ipsum dolor sit amet, consect etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     link: '/',
   },
   {
-    icon: MapPinIcon,
+    image: icons3,
+    title: 'Expert Advice',
+    desc: 'Lorem ipsum dolor sit amet, consect etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    link: '/',
+  },
+  {
+    image: icons4,
     title: 'Service everywhere',
     desc: 'Lorem ipsum dolor sit amet, consect etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     link: '/',
-  },
-  {
-    icon: ShieldCheckIcon,
-    title: 'Safety',
-    desc: 'Lorem ipsum dolor sit amet, consect etur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    link: '/',
   }
-
 ]
 
 
@@ -233,10 +237,10 @@ const Portfolio: PortfolioSection[] = [
 
 //Blog
 
-import blog1 from '/images/blog-grid/blog-1.jpg';
-import blog2 from '/images/blog-grid/blog-2.jpg';
-import blog3 from '/images/blog-grid/blog-3.jpg';
-import blog4 from '/images/blog-grid/blog-4.jpg';
+import blog1 from '/images/blog-grid/blog1.png';
+import blog2 from '/images/blog-grid/blog2.png';
+import blog3 from '/images/blog-grid/blog3.jpg';
+import blog4 from '/images/blog-grid/blog4.jpg';
 
 
 const Blog: BlogSection[] = [
@@ -244,51 +248,56 @@ const Blog: BlogSection[] = [
     id: 1,
     img: blog1,
     badge: 'UX Design',
-    date: 'Aug 12, 2024',
+    date: 'Mar 21, 2025',
     view: '27,567 Views',
-    title: 'เคล็ดลับกำจัดความเหงาแบบง่ายๆ ที่เราอยากแนะนำ',
-    desc: 'เหงายิ่งกว่าเหงา เขาว่าฝนทำให้คนเหงาจริงไหม? หลายคนก็ถามว่าแล้วถ้ารู้สึกเหงาล่ะ จะต้องทำยังไงดี? วันนี้ SERVF มีวิธีง่ายๆ 5 ข้อ ที่น่าจะช่วยทุกคน คลายเหงาได้',
-    name: 'Mark R. Freeman'
+    title: '15 เคล็ดลับการเรียน! ทำยังไงให้ได้เกรด 4 ทุกวิชา เรียนไม่เก่งก็ทำได้',
+    desc: 'ไม่ว่าใครก็อยากเป็นคนเรียนเก่ง และอยากได้เกรด 4 ทุกวิชา แต่ความเก่งก็ขึ้นอยู่การฝึกฝน และความตั้งใจด้วย ถึงแม้ว่าจะเรียนไม่เก่ง แต่ถ้าหากมีความพยายาม ฝึกฝนตนเอง ทบทวนบทเรียนอย่างสม่ำเสมอ',
+    name: 'Mark R. Freeman',
+    link: 'https://enconcept.com/how-to-get-straight-a/'
   },
-  { id: 2,
+  {
+    id: 2,
     img: blog2,
     badge: 'Digital',
-    date: 'Aug 11, 2024',
+    date: 'Mar 20, 2025',
     view: '29,567 Views',
-    title: 'ทริปกิจกรรมที่เหมาะแก่การไปเที่ยวกับกลุ่มเพื่อน',
+    title: 'คิดงานไม่ออกทำไงดี?10 วิธีจัดการสมองตันให้กลับมาไอเดียแล่นอีกครั้ง',
     desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
-    name: 'James Robert'
+    name: 'James Robert',
+    link: 'https://shortrecap.co/academic/self-improvement/%e0%b8%84%e0%b8%b4%e0%b8%94%e0%b8%87%e0%b8%b2%e0%b8%99%e0%b9%84%e0%b8%a1%e0%b9%88%e0%b8%ad%e0%b8%ad%e0%b8%81%e0%b8%97%e0%b8%b3%e0%b9%84%e0%b8%87%e0%b8%94%e0%b8%b5/'
   },
   {
     id: 3,
     img: blog3,
     badge: 'Html',
-    date: 'Aug 10, 2024',
+    date: 'Mar 19, 2025',
     view: '28,567 Views',
-    title: '10 กิจกรรมที่คนขอนแก่นห้ามพลาด!',
+    title: 'เลือกเรียนมหาลัยไหนดี? จากจุดเด่นของมหาลัยกว่า 20 ที่ ครบ 4 ภาค!!',
     desc: 'น้องเป็นสาวขอนแก่น ยังบ่เคยมีแฟน บ้านอยู่แดนอีสาน น้องเป็นสาววัยอ่อน ได้แต่นอนตะแคง ยามเมื่อแลงฝันหวาน จะมีชายใด ไผเดต้องการ จะมีชายใด ไผเดต้องการ หมายปองน้องนั่น แม้ต้องการจะคอย สาวอีสานบ้านป่า เช้าก็ไปทำนา ค่ำแลงมาเหงาหงอย เขาว่าน้องเป็นลาว เป็นสาวเมืองอีสาน ใจน้องนั้นเลื่อนลอย จงเอ็นดู แน้เด้ออ้ายเด้อ จงปรานี น้องแน่จั๊กหน่อย ฮักน้องบ่อยบ่อย พอน้องได้พลอยดีใจ',
-    name: 'David William'
+    name: 'David William',
+    link: 'https://www.smartmathpro.com/article/university-highlight/'
   },
   {
     id: 4,
     img: blog4,
     badge: 'Html',
-    date: 'Aug 9, 2024',
+    date: 'Mar 18, 2025',
     view: '28,567 Views',
-    title: '“Lonely Market” ถ้าคุณเหงาเราช่วยได้!',
+    title: 'รวม 10 แอป ตัวช่วยการ เรียนออนไลน์ เรียนสนุก เข้าถึงง่ายขึ้น',
     desc: 'นี่คือเหงานี่แหละเหงา นี่คือความจริงที่ได้เจอ เจ็บปวดทรมาน ลึกลงข้างในใจ โอ้ความเหงา มันช่างหนาว มันช่างยาวนานและทุกข์ทน รอคอยใครบางคนมาหยุดมัน',
-    name: 'David William'
+    name: 'David William',
+    link: 'https://www.learneducation.co.th/10-%E0%B9%81%E0%B8%AD%E0%B8%9B-%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B8%8A%E0%B9%88%E0%B8%A7%E0%B8%A2%E0%B8%81%E0%B8%B2%E0%B8%A3-%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%99%E0%B8%AD%E0%B8%AD%E0%B8%99/'
   },
-  {
-    id: 5,
-    img: blog3,
-    badge: 'Html',
-    date: 'Aug 8, 2024',
-    view: '28,567 Views',
-    title: 'This Week in Search: New Limits and Exciting Features',
-    desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
-    name: 'David William'
-  },
+  // {
+  //   id: 5,
+  //   img: blog3,
+  //   badge: 'Html',
+  //   date: 'Mar 17, 2025',
+  //   view: '28,567 Views',
+  //   title: 'This Week in Search: New Limits and Exciting Features',
+  //   desc: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+  //   name: 'David William'
+  // },
 
 
 ];
@@ -296,108 +305,227 @@ const Blog: BlogSection[] = [
 
 //Team
 
-import team1 from '/images/team/team-1.jpg';
-import team2 from '/images/team/team-2.jpg';
-import team3 from '/images/team/team-3.jpg';
-import team4 from '/images/team/team-4.jpg';
+import mk1 from '/images/team/mk1.png';
+import mk2 from '/images/team/mk2.png';
+import mk3 from '/images/team/mk3.png';
+import mk4 from '/images/team/mk4.png';
+import mk5 from '/images/team/mk5.png';
+
+import fn1 from '/images/team/fn1.png';
+import fn2 from '/images/team/fn2.png';
+import fn3 from '/images/team/fn3.png';
+import fn4 from '/images/team/fn4.png';
+import fn5 from '/images/team/fn5.png';
+
+import ds1 from '/images/team/ds1.png';
+import ds2 from '/images/team/ds2.png';
+
+import lan1 from '/images/team/lan1.png';
+import lan2 from '/images/team/lan2.png';
+import lan3 from '/images/team/lan3.png';
+
+import law1 from '/images/team/law1.png';
+
+import tech1 from '/images/team/tech1.png';
+import tech2 from '/images/team/tech2.png';
+import tech3 from '/images/team/tech3.png';
+import tech4 from '/images/team/tech4.png';
+
+import ac1 from '/images/team/ac1.png';
+import ac2 from '/images/team/ac2.png';
+import ac3 from '/images/team/ac3.png';
+import ac4 from '/images/team/ac4.png';
+import ac5 from '/images/team/ac5.png';
+import ac6 from '/images/team/ac6.png';
+import ac7 from '/images/team/ac7.png';
+import ac8 from '/images/team/ac8.png';
+
+
 
 const Team: TeamSection[] = [
   {
-    img: team1,
-    title: "Michael Doe",
+    img: mk1,
+    title: "Khim",
     subtitle: "Property Specialist",
     desc: "You can relay on our amazing features list and also our customer services will be great experience.",
-    socialicon: [
-      {
-        url: "/",
-        icon: "mdi mdi-facebook",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-twitter",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-instagram",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-youtube",
-      },
-    ],
+    
   },
   {
-    img: team2,
-    title: "Michael Doe",
+    img: mk2,
+    title: "Prat",
     subtitle: "Property Specialist",
     desc: "You can relay on our amazing features list and also our customer services will be great experience.",
-    socialicon: [
-      {
-        url: "/",
-        icon: "mdi mdi-facebook",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-twitter",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-instagram",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-youtube",
-      },
-    ],
+    
   },
   {
-    img: team3,
-    title: "Michael Doe",
+    img: mk3,
+    title: "Ton-aor",
     subtitle: "Property Specialist",
     desc: "You can relay on our amazing features list and also our customer services will be great experience.",
-    socialicon: [
-      {
-        url: "/",
-        icon: "mdi mdi-facebook",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-twitter",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-instagram",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-youtube",
-      },
-    ],
+   
   },
   {
-    img: team4,
-    title: "Michael Doe",
+    img: mk4,
+    title: "Zara",
     subtitle: "Property Specialist",
     desc: "You can relay on our amazing features list and also our customer services will be great experience.",
-    socialicon: [
-      {
-        url: "/",
-        icon: "mdi mdi-facebook",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-twitter",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-instagram",
-      },
-      {
-        url: "/",
-        icon: "mdi mdi-youtube",
-      },
-    ],
+    
   },
+  {
+    img: mk5,
+    title: "Mild",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: fn1,
+    title: "Tiw",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: fn2,
+    title: "Aom",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: fn3,
+    title: "Boss",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: fn4,
+    title: "Mark",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: fn5,
+    title: "Pleng",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: ds1,
+    title: "Namwan",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: ds2,
+    title: "Bim",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: lan1,
+    title: "Fasai",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: lan2,
+    title: "Mimi",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: lan3,
+    title: "Ja",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: law1,
+    title: "Pa",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: tech1,
+    title: "Pluem",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: tech2,
+    title: "Pure",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: tech3,
+    title: "Jan",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: tech4,
+    title: "Khet",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: ac1,
+    title: "Din",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
+  {
+    img: ac2,
+    title: "Minty",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac3,
+    title: "Fon",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac4,
+    title: "May",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac5,
+    title: "Mootang",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac6,
+    title: "Jane",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac7,
+    title: "Sunshine",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+  {
+    img: ac8,
+    title: "Bam",
+    subtitle: "Property Specialist",
+    desc: "You can relay on our amazing features list and also our customer services will be great experience.",
+  },
+
 ]
 
 //Testimonial 

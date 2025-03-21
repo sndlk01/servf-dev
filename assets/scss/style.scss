@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@100;200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@200;300;400;500;600;700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Mitr:wght@200;300;400;500;600;700&display=swap');
+
 @import 'variables';
 @import 'vuetify/styles/main.sass';
 @import 'override';
@@ -6,6 +9,7 @@
 @import 'layout/container';
 @import 'layout/header';
 @import 'layout/footer';
+@import 'fonts';
 
 /*components*/
 @import './components/VBreadcrumb';
@@ -30,3 +34,4 @@
 
 //Corporate Demo
 @import 'demos/corporate';
+

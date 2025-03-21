@@ -8,7 +8,8 @@ type Services = {
 
 //Build Features
 type BuildFeatures = {
-    icon: TablerIconComponent;
+    // icon: TablerIconComponent;
+    image: string;
     title: string;
     desc:string;
     link:string;
@@ -42,14 +43,16 @@ type PortfolioSection = {
 
 //Blog
 type BlogSection = {
-    id: any;
-    img: string;
-    badge:string;
-    date:string;
-    view:string;
-    title: string;
-    desc:string;
-    name:string;
+    id: number;
+  title: string;
+  desc: string;
+  badge: string;
+  date: string;
+  view: string;
+  name: string;
+  img: string;
+//   imageUrl: string;
+  link: string;
 };
 
 //Team
@@ -63,7 +66,7 @@ type TeamSection = {
     title: string;
     subtitle:string;
     desc:string;
-    socialicon: teamGroupType[];
+    // socialicon: teamGroupType[];
 };
 
 
