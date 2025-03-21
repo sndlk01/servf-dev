@@ -22,10 +22,8 @@
                 :class="{ 'active-card': index === 1 || visibleReviews.length === 1 }">
                 <v-card elevation="10" class="mx-auto">
                   <v-card-text class="pa-sm-8 pa-5">
-                    <img src="/images/shape/question.png" alt="" style="width: 30px;">
                     <p class="mb-8 text-subtitle-1">"{{ review.review }}"</p>
                     <div class="d-flex align-center">
-                      <img src="/images/blog/account.png" alt="" style="width: 30px;">
                       <div class="ml-5">
                         <h6 class="font-weight-medium text-dark text-subtitle-1">
                           {{ review.name }}
