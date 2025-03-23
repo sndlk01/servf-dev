@@ -178,7 +178,7 @@ const Team: TeamSection[] = [
   },
   {
     img: mk2,
-    title: "Prat",
+    title: "Prach",
     subtitle: "Property Specialist",
     desc: "You can relay on our amazing features list and also our customer services will be great experience.",
     
