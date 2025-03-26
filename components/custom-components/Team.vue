@@ -2,8 +2,71 @@
 import { ref, reactive, computed } from 'vue';
 import { Team } from '@/_mockApis/custom-components/index';
 
-// ข้อมูลประเภทบริการ (Categories)
-const serviceCategories = ref([
+// Define interfaces for type safety
+interface PortfolioItem {
+  title: string;
+  description: string;
+  image: string;
+}
+
+interface Servfy {
+  id: string;
+  title: string;
+  subtitle: string;
+  desc: string;
+  img: string;
+  categoryId: number;
+  portfolio?: PortfolioItem[];
+}
+
+interface Category {
+  id: number;
+  name: string;
+  icon: string;
+}
+
+// Initialize servfiesWithCategories with proper typing
+const servfiesWithCategories = ref<Servfy[]>(Team.map((member, index) => ({
+  ...member,
+  id: `servfy-${index}`,
+  categoryId: getCategoryIdByIndex(index),
+  portfolio: getPortfolioByIndex(index)
+})));
+
+function getCategoryIdByIndex(index: number): number {
+  if (index < 5) return 1;
+  if (index < 10) return 2;
+  if (index < 12) return 3;
+  if (index < 15) return 4;
+  if (index < 16) return 5;
+  if (index < 20) return 6;
+  return 7;
+}
+
+function getPortfolioByIndex(index: number): PortfolioItem[] | undefined {
+  if (index === 0) return [
+    { title: 'Marketing Campaign 2023', description: 'Successful product launch campaign', image: Team[0].img },
+    { title: 'Brand Strategy', description: 'Developed comprehensive brand identity', image: Team[0].img }
+  ];
+  if (index === 1) return [
+    { title: 'Social Media Management', description: 'Increased engagement by 150%', image: Team[1].img }
+  ];
+  return undefined;
+}
+
+// Mock Portfolio Data
+const portfolioItems = ref(Team.map(member => ({
+  id: member.title,
+  title: member.title,
+  category: member.subtitle,
+  description: member.desc,
+  image: member.img
+})));
+
+const showPortfolio = ref(false);
+
+// Service Categories
+const serviceCategories = ref<Category[]>([
   { id: 1, name: 'Marketing', icon: 'mdi-bullhorn' },
   { id: 2, name: 'Finance', icon: 'mdi-cash' },
   { id: 3, name: 'Design', icon: 'mdi-palette' },
@@ -13,76 +76,64 @@ const serviceCategories = ref([
   { id: 7, name: 'Activity', icon: 'mdi-heart-pulse' },
 ]);
 
-const servfiesWithCategories = ref([
-  { ...Team[0], categoryId: 1 },
-  { ...Team[1], categoryId: 1 },
-  { ...Team[2], categoryId: 1 },
-  { ...Team[3], categoryId: 1 },
-  { ...Team[4], categoryId: 1 },
+const showPortfolioModal = ref(false);
+const currentMemberPortfolio = ref<Servfy | null>(null);
+const currentPortfolioIndex = ref(0);
+const currentModalStep = ref(1); // สำหรับจัดการขั้นตอนใน Modal
 
-  { ...Team[5], categoryId: 2 },
-  { ...Team[6], categoryId: 2 },
-  { ...Team[7], categoryId: 2 },
-  { ...Team[8], categoryId: 2 },
-  { ...Team[9], categoryId: 2 },
+// Function to view portfolio
+const viewPortfolio = (servfy: Servfy) => {
+  currentMemberPortfolio.value = servfy;
+  currentPortfolioIndex.value = 0;
+  showPortfolioModal.value = true;
+};
+// Navigation for portfolio items
+const nextPortfolioItem = () => {
+  if (currentMemberPortfolio.value?.portfolio &&
+    currentPortfolioIndex.value < currentMemberPortfolio.value.portfolio.length - 1) {
+    currentPortfolioIndex.value++;
+  }
+};
 
-  { ...Team[10], categoryId: 3 },
-  { ...Team[11], categoryId: 3 },
+const prevPortfolioItem = () => {
+  if (currentPortfolioIndex.value > 0) {
+    currentPortfolioIndex.value--;
+  }
+};
 
-  { ...Team[12], categoryId: 4 },
-  { ...Team[13], categoryId: 4 },
-  { ...Team[14], categoryId: 4 },
+// Modal step navigation
+const nextModalStep = () => {
+  if (currentModalStep.value < 3) {
+    currentModalStep.value++;
+  }
+};
 
-  { ...Team[15], categoryId: 5 },
+const prevModalStep = () => {
+  if (currentModalStep.value > 1) {
+    currentModalStep.value--;
+  }
+};
 
-  { ...Team[16], categoryId: 6 },
-  { ...Team[17], categoryId: 6 },
-  { ...Team[18], categoryId: 6 },
-  { ...Team[19], categoryId: 6 },
-
-  { ...Team[20], categoryId: 7 },
-  { ...Team[21], categoryId: 7 },
-  { ...Team[22], categoryId: 7 },
-  { ...Team[23], categoryId: 7 },
-  { ...Team[24], categoryId: 7 },
-  { ...Team[25], categoryId: 7 },
-  { ...Team[26], categoryId: 7 },
-  { ...Team[27], categoryId: 7 },
-
-]);
-
-// State สำหรับขั้นตอนการจอง
+// State for booking steps
 const currentStep = ref(1);
-interface Category {
-  id: number;
-  name: string;
-  icon: string;
-}
-
 const selectedCategory = ref<Category | null>(null);
-interface Servfy {
-  title: string;
-  subtitle: string;
-  img: string;
-  categoryId: number;
-}
-
 const selectedServfy = ref<Servfy | null>(null);
 const bookingDate = ref('');
 const bookingTime = ref({
   start: '',
   end: ''
 });
-const consultType = ref(''); // 'online' หรือ 'onsite'
+const consultType = ref(''); // 'online' or 'onsite'
 const locationDetails = ref({
   place: '',
+  customPlace: '',
   location: { lat: 0, lng: 0 }
 });
 
-// สำหรับ tab ในการจอง
+// For booking tabs
 const bookingTab = ref('day');
 
-// ข้อมูลผู้จอง
+// Customer info
 const customerInfo = ref({
   name: '',
   phone: '',
@@ -90,30 +141,30 @@ const customerInfo = ref({
   note: ''
 });
 
-// สถานที่นัดพบ (mockup)
+// Meeting places
 const meetingPlaces = ref([
   { id: 1, name: 'KKBS', address: 'คณะบริหารธุรกิจและการบัญชี มหาวิทยาลัยขอนแก่น' },
   { id: 2, name: 'KKBS Cafe', address: 'คาเฟ่ในคณะบริหารธุรกิจและการบัญชี' },
-  { id: 3, name: 'KKBS Studio', address: 'สตูดิโอในคณะบริหารธุรกิจและการบัญชี' }
+  { id: 3, name: 'KKBS Studio', address: 'สตูดิโอในคณะบริหารธุรกิจและการบัญชี' },
+  { id: 4, name: 'Other', address: 'ระบุสถานที่อื่นๆ' }
 ]);
 
-// กรองรายชื่อ Servfies ตามหมวดหมู่ที่เลือก
+// Filter servfies by selected category
 const filteredServfies = computed(() => {
   if (!selectedCategory.value) {
     return servfiesWithCategories.value;
   }
   return servfiesWithCategories.value.filter(servfy =>
-    selectedCategory.value?.id !== undefined && servfy.categoryId === selectedCategory.value.id
+    servfy.categoryId === selectedCategory.value?.id
   );
 });
 
-// เตรียมวันที่สำหรับ calendar
+// Prepare dates for calendar
 const currentMonth = ref(new Date());
 const daysInMonth = computed(() => {
   const year = currentMonth.value.getFullYear();
   const month = currentMonth.value.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
-  // ปรับให้วันแรกเป็นวันจันทร์ (0 = จันทร์, 6 = อาทิตย์)
   const adjFirstDay = firstDay === 0 ? 6 : firstDay - 1;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -141,7 +192,7 @@ const currentMonthName = computed(() => {
   return `${monthNames[currentMonth.value.getMonth()]} ${currentMonth.value.getFullYear()}`;
 });
 
-// ฟังก์ชันสำหรับการนำทาง
+// Navigation functions
 const nextMonth = () => {
   currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() + 1, 1);
 };
@@ -150,20 +201,18 @@ const prevMonth = () => {
   currentMonth.value = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth() - 1, 1);
 };
 
-// ฟังก์ชันสำหรับการเลือกวันที่
-const selectDate = (day: any) => {
+// Date selection
+const selectDate = (day: number | null) => {
   if (!day) return;
   const selectedDate = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth(), day);
   bookingDate.value = selectedDate.toISOString().split('T')[0];
-  // ถ้าเลือกวันที่แล้วให้ไปที่ขั้นตอนการเลือกเวลา
-  bookingTab.value = 'time';
+  bookingTab.value = 'start-time';
 };
 
-// ฟังก์ชันสำหรับการเปลี่ยนขั้นตอน
+// Step navigation
 const nextStep = () => {
   if (currentStep.value < 4) {
     currentStep.value++;
-    // ถ้าไปที่ขั้นตอนที่ 2 ให้เริ่มที่การเลือกวันที่
     if (currentStep.value === 2) {
       bookingTab.value = 'day';
     }
@@ -176,9 +225,9 @@ const prevStep = () => {
   }
 };
 
-// ฟังก์ชันสำหรับการส่งข้อมูลไปยัง Line OA
+// Submit booking to Line OA
+// แก้ไขฟังก์ชัน submitBooking ใน <script setup> ของไฟล์ Vue
 const submitBooking = () => {
-  // สร้างข้อความที่จะส่งไป Line OA
   const servfyName = selectedServfy.value ? selectedServfy.value.title : '';
   const categoryName = selectedCategory.value ? selectedCategory.value.name : '';
 
@@ -189,55 +238,90 @@ const submitBooking = () => {
     consultTypeText = 'พบที่สถานที่';
   }
 
-  // จัดรูปแบบวันที่ให้สวยงาม
   const formattedDate = bookingDate.value ? new Date(bookingDate.value).toLocaleDateString('th-TH', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   }) : '';
 
-  // สร้างข้อความสำหรับส่งไป Line OA
+  let placeText = locationDetails.value.place;
+  if (locationDetails.value.place === 'Other') {
+    placeText = locationDetails.value.customPlace;
+  }
+
+  // สร้างข้อความในรูปแบบที่ Line OA จะรู้ว่าเป็นการจอง และควรตอบกลับ
+  // โดยใช้คีย์เวิร์ดพิเศษที่คุณตั้งค่าใน Auto-Reply ของ Line OA
   const message = `
-SERVF - คำขอจองใหม่
-ประเภทบริการ: ${categoryName}
-Servfy: ${servfyName}
-วันที่: ${formattedDate}
-เวลา: ${bookingTime.value.start} - ${bookingTime.value.end} น.
+BOOKING_REQUEST #${Math.floor(Math.random() * 10000)}
+สวัสดีคุณ ${customerInfo.value.name}
+นี่คือรายระเอียดสำหรับการจองบริการของคุณ (โปรดตรวจสอบข้อมูลการจองบริการของคุณ)
+ปรึกษาด้าน: ${categoryName}
+Survfies(ผู้ให้คำปรึกษา): ${servfyName}
+วันที่จอง: ${formattedDate}
+เวลาที่จอง: ${bookingTime.value.start} - ${bookingTime.value.end} น.
 รูปแบบ: ${consultTypeText}
-สถานที่: ${locationDetails.value.place}
-ผู้จอง: ${customerInfo.value.name}
+สถานที่: ${placeText}
 เบอร์โทร: ${customerInfo.value.phone}
-อีเมล: ${customerInfo.value.email}
-หมายเหตุ: ${customerInfo.value.note}
   `.trim();
 
-  // URL สำหรับส่งข้อความไปยัง Line OA
-  const lineOaUrl = `https://line.me/R/oaMessage/@842vmgfm/?${encodeURIComponent(message)}`;
+  // เก็บข้อมูลการจองลงใน localStorage เพื่อใช้แสดงในภายหลัง
+  const bookingData = {
+    id: `booking-${Date.now()}`,
+    customerName: customerInfo.value.name,
+    serviceCategory: categoryName,
+    servfyName: servfyName,
+    formattedDate: formattedDate,
+    startTime: bookingTime.value.start,
+    endTime: bookingTime.value.end,
+    consultType: consultTypeText,
+    place: placeText,
+    timestamp: new Date().toISOString()
+  };
+  
+  // เก็บข้อมูลลงใน localStorage
+  const existingBookings = JSON.parse(localStorage.getItem('servfyBookings') || '[]');
+  existingBookings.push(bookingData);
+  localStorage.setItem('servfyBookings', JSON.stringify(existingBookings));
 
-  // เปิดหน้าต่างใหม่เพื่อส่งข้อความ
+  // เปิด Line OA และส่งข้อความ
+  const lineOaUrl = `https://line.me/R/oaMessage/@842vmgfm/?${encodeURIComponent(message)}`;
   window.open(lineOaUrl, '_blank');
+  
+  // แสดงข้อความยืนยันการจอง
+  alert('บันทึกการจองเรียบร้อยแล้ว กรุณาตรวจสอบข้อความยืนยันใน Line');
+  
+  // รีเซ็ตฟอร์มหรือกลับไปหน้าแรก (ตัวอย่าง)
+  // resetForm(); หรือ router.push('/');
 };
 
-// ช่วงเวลาที่เลือกได้
+// Time slots
 const timeSlots = ref([
-  { start: '09.00', end: '10.00' },
-  { start: '10.00', end: '11.00' },
-  { start: '11.00', end: '12.00' },
-  { start: '13.00', end: '14.00' },
-  { start: '14.00', end: '15.00' },
-  { start: '15.00', end: '16.00' },
-  { start: '16.00', end: '17.00' }
+  '09.00', '10.00', '11.00', '12.00',
+  '13.00', '14.00', '15.00', '16.00', '17.00'
 ]);
 
-// เลือกช่วงเวลา
-const selectTimeSlot = (slot: any) => {
-  bookingTime.value = slot;
-  // ถ้าเลือกช่วงเวลาแล้วให้ไปที่ขั้นตอนการเลือกรูปแบบการให้คำปรึกษา
+// Time selection
+const selectStartTime = (time: string) => {
+  bookingTime.value.start = time;
+  bookingTab.value = 'end-time';
+};
+
+const selectEndTime = (time: string) => {
+  bookingTime.value.end = time;
   bookingTab.value = 'consults';
 };
 
-// สำหรับการเลือกวันใน calendar
-const isToday = (day: any) => {
+const availableEndTimes = computed(() => {
+  if (!bookingTime.value.start) return [];
+
+  const startIndex = timeSlots.value.indexOf(bookingTime.value.start);
+  if (startIndex === -1) return [];
+
+  return timeSlots.value.slice(startIndex + 1);
+});
+
+// Date helpers
+const isToday = (day: number | null) => {
   if (!day) return false;
   const today = new Date();
   return (
@@ -247,7 +331,7 @@ const isToday = (day: any) => {
   );
 };
 
-const isSelectedDate = (day: any) => {
+const isSelectedDate = (day: number | null) => {
   if (!day || !bookingDate.value) return false;
   const selectedDate = new Date(bookingDate.value);
   return (
@@ -257,7 +341,7 @@ const isSelectedDate = (day: any) => {
   );
 };
 
-const isDayDisabled = (day: any) => {
+const isDayDisabled = (day: number | null) => {
   if (!day) return true;
   const date = new Date(currentMonth.value.getFullYear(), currentMonth.value.getMonth(), day);
   const today = new Date();
@@ -265,13 +349,13 @@ const isDayDisabled = (day: any) => {
   return date < today;
 };
 
-// เมื่อเลือกประเภทการให้คำปรึกษาเสร็จ
+// Consult selection
 const consultSelected = () => {
   nextStep();
 };
 
-// สำหรับแสดงข้อมูลที่เลือกในขั้นตอนสุดท้าย
-const formatDate = (dateString: any) => {
+// Format date for display
+const formatDate = (dateString: string) => {
   if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('th-TH', {
     year: 'numeric',
@@ -280,78 +364,93 @@ const formatDate = (dateString: any) => {
   });
 };
 
-// ฟังก์ชันสำหรับการเลือกหมวดหมู่
-const selectCategory = (category: any) => {
+// Category selection
+const selectCategory = (category: Category) => {
   if (selectedCategory.value && selectedCategory.value.id === category.id) {
-    // ถ้าคลิกหมวดหมู่ที่เลือกอยู่แล้ว ให้ยกเลิกการเลือก
     selectedCategory.value = null;
   } else {
     selectedCategory.value = category;
   }
 };
 
-// ฟังก์ชันสำหรับการเลือก Servfy
-const selectServfy = (servfy: any) => {
+// Servfy selection
+const selectServfy = (servfy: Servfy) => {
   selectedServfy.value = servfy;
   nextStep();
 };
 
-// ดึงชื่อหมวดหมู่จาก ID
-const getCategoryName = (categoryId: any) => {
+// Get category name by ID
+const getCategoryName = (categoryId: number | undefined) => {
+  if (categoryId === undefined) return '';
   const category = serviceCategories.value.find(cat => cat.id === categoryId);
   return category ? category.name : '';
+};
+
+// Place selection
+const selectPlace = (place: { name: string }) => {
+  locationDetails.value.place = place.name;
+  if (place.name !== 'Other') {
+    locationDetails.value.customPlace = '';
+  }
 };
 </script>
 
 <template>
-
   <div id="team">
-
     <div class="header-gradient">
       <h1 class="header-title" style="color: #ffedb9;">Find your Servfies</h1>
     </div>
 
     <div class="booking-container">
-      <!-- Step 1: เลือกประเภทบริการและ Servfy -->
+      <!-- Step 1: Select service category and Servfy -->
       <div v-if="currentStep === 1">
-        <!-- เลือกประเภทบริการ -->
+        <!-- Category selection -->
         <div class="category-selection">
           <button v-for="category in serviceCategories" :key="category.id"
             :class="{ 'category-selected': selectedCategory && selectedCategory.id === category.id }"
             class="category-btn" @click="selectCategory(category)">
-            <!-- <i class="material-icons category-icon">{{ category.icon.replace('mdi-', '') }}</i> -->
             {{ category.name }}
           </button>
         </div>
 
-        <!-- แสดง Servfies -->
+        <!-- Display Servfies -->
         <div class="servfies-grid">
-          <div v-for="servfy in filteredServfies" :key="servfy.title" class="servfy-card">
+          <div v-for="servfy in filteredServfies" :key="servfy.id" class="servfy-card">
             <div class="servfy-profile">
               <img :src="servfy.img" alt="servfy profile" class="profile-image" />
-              <h3 class="servfy-name">{{ servfy.title }}</h3>
+              <div style="display: flex; flex-wrap: nowrap; justify-content: center; align-items: center;">
+                <h3 class="servfy-name">{{ servfy.title }}</h3>
+              <a href="#" style="margin-left: 2px;" @click.prevent="viewPortfolio(servfy)"
+                v-if="servfy.portfolio" class="portfolio-link">
+                <div class="circle-icon">
+                  <i class="material-icons">chevron_right</i>
+                </div>
+              </a>
+              </div>
+              
               <div class="rating">
                 <i v-for="n in 5" :key="n" class="material-icons star-icon">star</i>
               </div>
-              <button class="booking-btn" @click="selectServfy(servfy)">
-                BOOKING
-              </button>
+              <div class="servfy-actions">
+
+                <button class="booking-btn" @click="selectServfy(servfy)">
+                  BOOKING
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Step 2: เลือกวันที่ เวลา และรูปแบบการให้คำปรึกษา -->
+      <!-- Step 2: Select date, time and consultation type -->
       <div v-else-if="currentStep === 2" class="booking-step">
-        <!-- แสดงข้อมูล Servfy ที่เลือก -->
+        <!-- Selected Servfy info -->
         <div class="selected-servfy">
           <div class="servfy-info">
             <img :src="selectedServfy?.img" alt="servfy profile" class="profile-small" />
             <div class="servfy-details">
               <h2 class="servfy-name">{{ selectedServfy?.title }}</h2>
               <p>{{ getCategoryName(selectedServfy?.categoryId) }}</p>
-              
-              <!-- <p class="servfy-position">{{ selectedServfy?.subtitle }}</p> -->
               <div class="rating-2">
                 <i v-for="n in 5" :key="n" class="material-icons star-icon small">star</i>
                 <span class="rating-text">(5.0)</span>
@@ -360,7 +459,7 @@ const getCategoryName = (categoryId: any) => {
           </div>
         </div>
 
-        <!-- Tabs สำหรับขั้นตอนการจอง -->
+        <!-- Booking tabs -->
         <div class="booking-tabs">
           <div class="tab-header">
             <div class="tab-item" :class="{ 'active-tab': bookingTab === 'day' }" @click="bookingTab = 'day'">
@@ -368,21 +467,29 @@ const getCategoryName = (categoryId: any) => {
               <span>Booking Day</span>
               <small>เลือกวันที่</small>
             </div>
-            <div class="tab-item" :class="{ 'active-tab': bookingTab === 'time' }" @click="bookingTab = 'time'">
-              <i class="material-icons tab-icon">access_time</i>
-              <span>Booking Time</span>
-              <small>เลือกเวลา</small>
+            <div class="tab-item" :class="{ 'active-tab': bookingTab === 'start-time' }"
+              @click="bookingTab = 'start-time'">
+              <i class="material-icons tab-icon">schedule</i>
+              <span>Start Time</span>
+              <small>เวลาเริ่มต้น</small>
             </div>
-            <div class="tab-item" :class="{ 'active-tab': bookingTab === 'consults' }" @click="bookingTab = 'consults'">
+            <div class="tab-item" :class="{ 'active-tab': bookingTab === 'end-time' }" @click="bookingTab = 'end-time'"
+              :disabled="!bookingTime.start">
+              <i class="material-icons tab-icon">schedule</i>
+              <span>End Time</span>
+              <small>เวลาสิ้นสุด</small>
+            </div>
+            <div class="tab-item" :class="{ 'active-tab': bookingTab === 'consults' }" @click="bookingTab = 'consults'"
+              :disabled="!bookingTime.end">
               <i class="material-icons tab-icon">chat</i>
               <span>Consults</span>
               <small>เลือกรูปแบบ</small>
             </div>
           </div>
 
-          <!-- เนื้อหาของแต่ละ Tab -->
+          <!-- Tab content -->
           <div class="tab-content">
-            <!-- Tab 1: เลือกวันที่ -->
+            <!-- Tab 1: Select date -->
             <div v-if="bookingTab === 'day'" class="day-selector">
               <div class="month-selector">
                 <button class="nav-btn" @click="prevMonth">
@@ -417,22 +524,30 @@ const getCategoryName = (categoryId: any) => {
               </div>
             </div>
 
-            <!-- Tab 2: เลือกเวลา -->
-            <div v-if="bookingTab === 'time'" class="time-selector">
-              <div class="time-slots">
-                <div class="time-row">
-                  <div v-for="slot in timeSlots" :key="`${slot.start}-${slot.end}`" class="time-slot"
-                    :class="{ 'selected-slot': bookingTime.start === slot.start }" @click="selectTimeSlot(slot)">
-                    <div class="slot-button">
-                      <div class="slot-time">{{ slot.start }} - {{ slot.end }}</div>
-                      <div class="slot-label">น.</div>
-                    </div>
-                  </div>
+            <!-- Tab 2: Select start time -->
+            <div v-if="bookingTab === 'start-time'" class="time-selector">
+              <h3 class="time-selector-title">Select Start Time</h3>
+              <div class="time-slots-grid">
+                <div v-for="time in timeSlots" :key="time" class="time-slot"
+                  :class="{ 'selected-slot': bookingTime.start === time }" @click="selectStartTime(time)">
+                  {{ time }}
                 </div>
               </div>
             </div>
 
-            <!-- Tab 3: เลือกรูปแบบการให้คำปรึกษา -->
+            <!-- Tab 3: Select end time -->
+            <div v-if="bookingTab === 'end-time'" class="time-selector">
+              <h3 class="time-selector-title">Select End Time</h3>
+              <p class="time-selector-subtitle">Start Time: {{ bookingTime.start }}</p>
+              <div class="time-slots-grid">
+                <div v-for="time in availableEndTimes" :key="time" class="time-slot"
+                  :class="{ 'selected-slot': bookingTime.end === time }" @click="selectEndTime(time)">
+                  {{ time }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 4: Select consultation type -->
             <div v-if="bookingTab === 'consults'" class="consult-selector">
               <div class="consult-options">
                 <div class="consult-option" :class="{ 'selected-option': consultType === 'online' }"
@@ -445,26 +560,31 @@ const getCategoryName = (categoryId: any) => {
                 </div>
               </div>
 
-              <!-- แสดงตัวเลือกสถานที่ถ้าเลือก Onsite -->
+              <!-- Location selector for onsite -->
               <div v-if="consultType === 'onsite'" class="location-selector">
                 <div v-for="place in meetingPlaces" :key="place.id" class="location-option"
-                  :class="{ 'selected-location': locationDetails.place === place.name }"
-                  @click="locationDetails.place = place.name">
+                  :class="{ 'selected-location': locationDetails.place === place.name }" @click="selectPlace(place)">
                   <div class="location-content">
                     <div class="location-name">{{ place.name }}</div>
                     <div class="location-address">{{ place.address }}</div>
                   </div>
                 </div>
+
+                <!-- Custom location input -->
+                <div v-if="locationDetails.place === 'Other'" class="custom-location-input">
+                  <label class="form-label">ระบุสถานที่</label>
+                  <input v-model="locationDetails.customPlace" class="form-input" placeholder="กรุณาระบุสถานที่นัดพบ" />
+                </div>
               </div>
 
-              <!-- ปุ่มดำเนินการต่อ -->
+              <!-- Action buttons -->
               <div class="action-buttons">
                 <button class="back-btn" @click="prevStep">
                   <i class="material-icons">arrow_back</i>
                   Back
                 </button>
                 <button class="next-btn" @click="consultSelected"
-                  :disabled="!consultType || (consultType === 'onsite' && !locationDetails.place)">
+                  :disabled="!consultType || (consultType === 'onsite' && !locationDetails.place) || (locationDetails.place === 'Other' && !locationDetails.customPlace)">
                   Next
                   <i class="material-icons">arrow_forward</i>
                 </button>
@@ -474,16 +594,16 @@ const getCategoryName = (categoryId: any) => {
         </div>
       </div>
 
-      <!-- Step 3: กรอกข้อมูลผู้จอง -->
+      <!-- Step 3: Customer information -->
       <div v-else-if="currentStep === 3" class="booking-step">
-        <!-- แสดงข้อมูล Servfy ที่เลือก -->
+        <!-- Selected Servfy info -->
         <div class="selected-servfy">
           <div class="servfy-info">
             <img :src="selectedServfy?.img" alt="servfy profile" class="profile-small" />
             <div class="servfy-details">
               <h2 class="servfy-name">{{ selectedServfy?.title }}</h2>
-              <p class="servfy-position">{{ selectedServfy?.subtitle }}</p>
-              <div class="rating">
+              <p>{{ getCategoryName(selectedServfy?.categoryId) }}</p>
+              <div class="rating-2">
                 <i v-for="n in 5" :key="n" class="material-icons star-icon small">star</i>
                 <span class="rating-text">(5.0)</span>
               </div>
@@ -491,7 +611,7 @@ const getCategoryName = (categoryId: any) => {
           </div>
         </div>
 
-        <!-- สรุปข้อมูลการจอง -->
+        <!-- Booking summary -->
         <div class="booking-summary">
           <div class="summary-row">
             <div class="summary-item">
@@ -518,15 +638,26 @@ const getCategoryName = (categoryId: any) => {
               </div>
             </div>
           </div>
+
+          <!-- Meeting location -->
+          <div class="summary-item">
+            <i class="material-icons summary-icon">place</i>
+            <div class="summary-detail">
+              <div class="summary-label">Location</div>
+              <div class="summary-value">
+                {{ locationDetails.place === 'Other' ? locationDetails.customPlace : locationDetails.place }}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- ฟอร์มข้อมูลผู้จอง -->
+        <!-- Customer form -->
         <div class="customer-form">
           <h3 class="form-title">กรอกข้อมูลผู้จอง</h3>
 
           <div class="form-group">
-            <label class="form-label">ชื่อ-นามสกุล</label>
-            <input v-model="customerInfo.name" class="form-input" placeholder="กรุณากรอกชื่อ-นามสกุล" />
+            <label class="form-label">ชื่อผู้จอง</label>
+            <input v-model="customerInfo.name" class="form-input" placeholder="กรุณากรอกชื่อผู้จอง" />
           </div>
 
           <div class="form-group">
@@ -534,16 +665,7 @@ const getCategoryName = (categoryId: any) => {
             <input v-model="customerInfo.phone" class="form-input" placeholder="กรุณากรอกเบอร์โทรศัพท์" />
           </div>
 
-          <div class="form-group">
-            <label class="form-label">อีเมล</label>
-            <input v-model="customerInfo.email" class="form-input" placeholder="กรุณากรอกอีเมล (ถ้ามี)" />
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">หมายเหตุ</label>
-            <textarea v-model="customerInfo.note" class="form-textarea"
-              placeholder="กรุณากรอกหมายเหตุ (ถ้ามี)"></textarea>
-          </div>
+         
 
           <div class="action-buttons">
             <button class="back-btn" @click="prevStep">
@@ -557,9 +679,53 @@ const getCategoryName = (categoryId: any) => {
           </div>
         </div>
       </div>
+
+      <!-- Portfolio Modal with Steps -->
+      <div v-if="showPortfolioModal && currentMemberPortfolio" class="portfolio-modal">
+        <div class="modal-overlay" @click="showPortfolioModal = false"></div>
+
+        <div class="modal-content">
+          <button class="close-btn" @click="showPortfolioModal = false">
+            <i class="material-icons">close</i>
+          </button>
+
+          <!-- Member Info -->
+          <div class="member-header">
+            <img :src="currentMemberPortfolio.img" class="member-image" />
+            <div class="member-info">
+              <h2>{{ currentMemberPortfolio.title }}</h2>
+              <p class="member-position">{{ currentMemberPortfolio.subtitle }}</p>
+              <div class="member-rating">
+                <i v-for="n in 5" :key="n" class="material-icons star-icon">star</i>
+                <span>(5.0)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Portfolio Items List -->
+          <div v-if="currentMemberPortfolio.portfolio" class="portfolio-list-container">
+            <h3 class="portfolio-section-title">ผลงานทั้งหมด</h3>
+
+            <div class="portfolio-list">
+              <div v-for="(item, index) in currentMemberPortfolio.portfolio" :key="index" class="portfolio-list-item">
+                <div class="portfolio-list-details">
+                  <h4>{{ item.title }}</h4>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Booking Action -->
+          <div class="portfolio-actions">
+            <button class="booking-btn large" @click="selectServfy(currentMemberPortfolio)">
+              Booking
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
 </template>
 
 <style scoped>
@@ -579,6 +745,94 @@ const getCategoryName = (categoryId: any) => {
   padding: 0;
 }
 
+/* Portfolio Section Styles */
+.portfolio-toggle {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.portfolio-btn {
+  background-color: #B388FF;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.portfolio-btn:hover {
+  background-color: #A96AFF;
+}
+
+.portfolio-section {
+  padding: 0 150px 40px;
+  background-color: white;
+}
+
+.portfolio-title {
+  text-align: center;
+  color: #A96AFF;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.portfolio-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-5px);
+}
+
+.portfolio-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.portfolio-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+  transform: translateY(0);
+}
+
+.portfolio-category {
+  color: #B388FF;
+  font-weight: 500;
+  margin: 5px 0;
+}
+
+.portfolio-description {
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
 .booking-container {
   width: 100%;
   padding: 30px 150px 80px;
@@ -586,11 +840,12 @@ const getCategoryName = (categoryId: any) => {
   border-radius: 30px 30px 0 0;
   position: relative;
   margin-top: -30px;
-  /* Pull up to overlap with gradient background */
 }
 
 @media (max-width: 1024px) {
-  .booking-container {
+
+  .booking-container,
+  .portfolio-section {
     padding: 30px 50px 80px;
   }
 
@@ -600,12 +855,18 @@ const getCategoryName = (categoryId: any) => {
 }
 
 @media (max-width: 768px) {
-  .booking-container {
+
+  .booking-container,
+  .portfolio-section {
     padding: 30px 20px 80px;
   }
 
   .header-title {
     font-size: 2.8rem;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 }
 
@@ -613,20 +874,10 @@ const getCategoryName = (categoryId: any) => {
   .header-title {
     font-size: 2.2rem;
   }
-}
 
-.booking-header {
-  text-align: center;
-  margin-bottom: 40px;
-  color: #A96AFF;
-}
-
-.booking-title {
-  font-size: 3rem;
-  font-weight: 600;
-  text-align: center;
-  color: #A96AFF;
-  margin-bottom: 2rem;
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ส่วนประเภทบริการด้านบน */
@@ -687,11 +938,8 @@ const getCategoryName = (categoryId: any) => {
 .profile-image {
   width: 120px;
   height: 120px;
-  /* border-radius: 50%; */
   object-fit: cover;
   margin: 0 auto 15px;
-  /* border: 2px solid white; */
-  /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
 .servfy-name {
@@ -710,6 +958,32 @@ const getCategoryName = (categoryId: any) => {
   display: flex;
   justify-content: center;
   margin: 10px 0;
+}
+
+.portfolio-link {
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.portfolio-link:hover {
+  transform: scale(1.1);
+}
+
+.circle-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #b07bff70;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.circle-icon:hover {
+  background-color: #b07bff60;
 }
 
 .star-icon {
@@ -759,11 +1033,8 @@ const getCategoryName = (categoryId: any) => {
 .profile-small {
   width: 90px;
   height: 90px;
-  /* border-radius: 50%; */
   object-fit: cover;
   margin-right: 20px;
-  /* border: 3px solid white; */
-  /* box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .servfy-details {
@@ -803,6 +1074,11 @@ const getCategoryName = (categoryId: any) => {
   align-items: center;
   transition: all 0.3s;
   position: relative;
+}
+
+.tab-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .tab-icon {
@@ -899,55 +1175,43 @@ const getCategoryName = (categoryId: any) => {
   padding: 20px 0;
 }
 
-.time-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.time-selector-title {
+  text-align: center;
+  color: #A96AFF;
+  margin-bottom: 20px;
 }
 
-.time-row {
-  display: flex;
-  flex-wrap: wrap;
+.time-selector-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 15px;
-  justify-content: center;
+  justify-items: center;
 }
 
 .time-slot {
-  flex: 0 0 calc(25% - 15px);
-  max-width: calc(25% - 15px);
-}
-
-.slot-button {
   padding: 15px;
   border: 1px solid #E0E0E0;
   border-radius: 10px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s;
+  width: 100%;
 }
 
-.slot-button:hover {
+.time-slot:hover {
   background-color: #F5F5F5;
 }
 
-.slot-time {
-  font-size: 1.1rem;
-  font-weight: 500;
-}
-
-.slot-label {
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.selected-slot .slot-button {
+.selected-slot {
   background-color: #B388FF;
   border-color: #B388FF;
   color: white;
-}
-
-.selected-slot .slot-label {
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /* Consult Options Styles */
@@ -1017,6 +1281,11 @@ const getCategoryName = (categoryId: any) => {
 
 .selected-location .location-address {
   color: rgba(255, 255, 255, 0.8);
+}
+
+.custom-location-input {
+  grid-column: 1 / -1;
+  padding: 20px;
 }
 
 .action-buttons {
@@ -1145,6 +1414,229 @@ const getCategoryName = (categoryId: any) => {
   cursor: not-allowed;
 }
 
+/* Modal Step Styles */
+.portfolio-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: relative;
+  background-color: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.member-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.member-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 30px;
+}
+
+.member-info {
+  flex: 1;
+}
+
+.member-position {
+  color: #666;
+  margin: 5px 0 15px;
+}
+
+.member-description {
+  color: #555;
+  line-height: 1.6;
+}
+
+.portfolio-items {
+  margin: 40px 0;
+}
+
+.portfolio-item {
+  margin-top: 20px;
+}
+
+.portfolio-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-arrow {
+  background: none;
+  border: none;
+  color: #B388FF;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.nav-arrow:disabled {
+  color: #E0E0E0;
+  cursor: not-allowed;
+}
+
+.portfolio-item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.portfolio-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.portfolio-item-details {
+  text-align: center;
+}
+
+.portfolio-pagination {
+  text-align: center;
+  margin-top: 15px;
+  color: #666;
+}
+
+.portfolio-actions {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.booking-btn.large {
+  padding: 5px 28px;
+  font-size: 1.2rem;
+}
+
+
+.nav-arrow:disabled {
+  color: #E0E0E0;
+  cursor: not-allowed;
+}
+
+.portfolio-item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.portfolio-image {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.portfolio-item-details {
+  text-align: center;
+}
+
+.portfolio-pagination {
+  text-align: center;
+  margin-top: 15px;
+  color: #666;
+}
+
+.portfolio-actions {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.action-title {
+  font-size: 1.8rem;
+  color: #B388FF;
+  margin-bottom: 10px;
+}
+
+.action-subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.modal-action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+
+.modal-back-btn,
+.modal-next-btn,
+.modal-confirm-btn {
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-back-btn {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+}
+
+.modal-next-btn {
+  background-color: #B388FF;
+  color: white;
+  border: none;
+  margin-left: auto;
+}
+
+.modal-confirm-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  width: 100%;
+  justify-content: center;
+}
+
 @media (max-width: 768px) {
   .booking-title {
     font-size: 2rem;
@@ -1166,9 +1658,8 @@ const getCategoryName = (categoryId: any) => {
     flex-direction: column;
   }
 
-  .time-slot {
-    flex: 0 0 calc(50% - 15px);
-    max-width: calc(50% - 15px);
+  .time-slots-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .consult-options {
@@ -1178,12 +1669,15 @@ const getCategoryName = (categoryId: any) => {
   .consult-option {
     flex: none;
   }
+
+  .location-selector {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
-  .time-slot {
-    flex: 0 0 100%;
-    max-width: 100%;
+  .time-slots-grid {
+    grid-template-columns: 1fr;
   }
 
   .booking-step {
@@ -1198,6 +1692,45 @@ const getCategoryName = (categoryId: any) => {
   .profile-small {
     margin-right: 0;
     margin-bottom: 15px;
+  }
+
+  .tab-header {
+    flex-wrap: wrap;
+  }
+
+  .tab-item {
+    flex: 0 0 50%;
+    padding: 10px;
+  }
+
+  .member-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .member-image {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .portfolio-nav {
+    flex-direction: column;
+  }
+
+  .portfolio-item-content {
+    margin: 20px 0;
+  }
+
+  .modal-action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-back-btn,
+  .modal-next-btn,
+  .modal-confirm-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 </style>

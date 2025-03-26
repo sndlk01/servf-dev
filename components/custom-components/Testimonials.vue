@@ -7,7 +7,7 @@
             <div class="d-flex align-center mb-5 justify-center" data-aos="fade-right" data-aos-delay="200" data-aos-duration="1000">
               <h3 class="text-dark">Review</h3>
             </div>
-            <h2 class="text-h2 text-dark mb-5" data-aos-fade-left data-aos-delay="200" data-aos-duration="1000">What Our Customer Say</h2>
+            <h2 class="text-h2 text-dark mb-5" data-aos-fade-left data-aos-delay="200" data-aos-duration="1000">What Our Consult Say</h2>
           </div>
         </v-col>
       </v-row>
