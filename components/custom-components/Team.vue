@@ -694,7 +694,7 @@ const selectPlace = (place: { name: string }) => {
             <img :src="currentMemberPortfolio.img" class="member-image" />
             <div class="member-info">
               <h2>{{ currentMemberPortfolio.title }}</h2>
-              <p class="member-position">{{ currentMemberPortfolio.subtitle }}</p>
+              <p class="member-position">{{ getCategoryName(selectedServfy?.categoryId) }}</p>
               <div class="member-rating">
                 <i v-for="n in 5" :key="n" class="material-icons star-icon">star</i>
                 <span>(5.0)</span>
