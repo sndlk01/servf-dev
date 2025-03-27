@@ -256,7 +256,7 @@ BOOKING_REQUEST #${Math.floor(Math.random() * 10000)}
 สวัสดีคุณ ${customerInfo.value.name}
 นี่คือรายระเอียดสำหรับการจองบริการของคุณ (โปรดตรวจสอบข้อมูลการจองบริการของคุณ)
 ปรึกษาด้าน: ${categoryName}
-Survfies(ผู้ให้คำปรึกษา): ${servfyName}
+Servfie(ผู้ให้คำปรึกษา): ${servfyName}
 วันที่จอง: ${formattedDate}
 เวลาที่จอง: ${bookingTime.value.start} - ${bookingTime.value.end} น.
 รูปแบบ: ${consultTypeText}
