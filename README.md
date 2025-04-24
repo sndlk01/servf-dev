@@ -1,10 +1,31 @@
-# Nuxt 3 Minimal Starter
+# Create a README.md file with the provided content
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+readme_content = """
+# SERVF – Simple way to find your CONSULTANTS
 
-## Setup
+[![SERVF Website](https://www.servfofficial.com/_nuxt/og-image.jpg)](https://www.servfofficial.com)
 
-Make sure to install the dependencies:
+> **SERVF** บริการหาเพื่อนไปทำกิจกรรมต่าง ๆ ร่วมกัน รวมไปถึงหาที่ปรึกษาเฉพาะด้านหรือปัญหาอื่น ๆ  
+> สามารถจองเพื่อปรึกษาบริการ ซึ่งจะลิงก์ไปยัง **Line OA**
+
+---
+
+## 🔗 Live Website
+
+👉 [https://www.servfofficial.com](https://www.servfofficial.com)
+
+---
+
+## 🧰 Nuxt 3 Minimal Starter
+
+ใช้ Nuxt 3 เพื่อสร้างเว็บไซต์ที่มีประสิทธิภาพสูง พร้อมรองรับ SSR และ Static Generation  
+อ่านเพิ่มเติมได้ที่ [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction)
+
+---
+
+## ⚙️ Setup
+
+ติดตั้ง dependencies ด้วย package manager ที่คุณเลือก:
 
 ```bash
 # yarn
@@ -15,28 +36,3 @@ npm install
 
 # bun
 bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
