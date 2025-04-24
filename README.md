@@ -1,9 +1,9 @@
 # SERVF – Simple way to find your CONSULTANTS
 
-[![SERVF Website](https://www.servfofficial.com/_nuxt/og-image.jpg)](https://www.servfofficial.com)
+[![SERVF Website](./servf-cover.png)](https://www.servfofficial.com)
 
-> **SERVF** บริการหาเพื่อนไปทำกิจกรรมต่าง ๆ ร่วมกัน รวมไปถึงหาที่ปรึกษาเฉพาะด้านหรือปัญหาอื่น ๆ  
-> สามารถจองเพื่อปรึกษาบริการ ซึ่งจะลิงก์ไปยัง **Line OA**
+> **SERVF** is a service that helps you find companions for various activities and also connects you with experts and consultants for specific issues.  
+> Book a session directly through our **Line OA** integration.
 
 ---
 
@@ -15,14 +15,14 @@
 
 ## 🧰 Nuxt 3 Minimal Starter
 
-ใช้ Nuxt 3 เพื่อสร้างเว็บไซต์ที่มีประสิทธิภาพสูง พร้อมรองรับ SSR และ Static Generation  
-อ่านเพิ่มเติมได้ที่ [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction)
+This project uses Nuxt 3 for building fast, modern web applications with support for SSR and Static Generation.  
+Check the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) for more information.
 
 ---
 
 ## ⚙️ Setup
 
-ติดตั้ง dependencies ด้วย package manager ที่คุณเลือก:
+Install dependencies using your preferred package manager:
 
 ```bash
 # yarn
