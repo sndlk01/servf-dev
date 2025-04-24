@@ -1,6 +1,3 @@
-# Create a README.md file with the provided content
-
-readme_content = """
 # SERVF – Simple way to find your CONSULTANTS
 
 [![SERVF Website](https://www.servfofficial.com/_nuxt/og-image.jpg)](https://www.servfofficial.com)
